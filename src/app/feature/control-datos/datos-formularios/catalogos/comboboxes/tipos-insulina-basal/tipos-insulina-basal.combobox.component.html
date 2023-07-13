@@ -1,0 +1,11 @@
+<mat-form-field appearance="fill" class="w-full">
+  <mat-label>Tipo de insulina basal</mat-label>
+  <mat-select [formControl]="basalInsulinTypeFormControl">
+    <mat-option *ngFor="let tipoInsulinaBasal of tiposInsulinaBasal"
+      [value]="tipoInsulinaBasal.id">{{tipoInsulinaBasal.value}}</mat-option>
+  </mat-select>
+  <mat-error *ngIf="basalInsulinTypeFormControl.hasError('required')">Este campo es
+    <strong>requerido</strong></mat-error>
+  <mat-hint *ngIf="tiposInsulinaBasal == null ||
+    tiposInsulinaBasal.length == 0">No hay valores de selección</mat-hint>
+</mat-form-field>

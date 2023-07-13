@@ -1,0 +1,11 @@
+<div class="tabs flex w-full justify-start items-end ">
+  <a (click)="tabChange(1)" [ngClass]="{'tab-active': tab==1,'pointer-events-none': tab<1 && !id}" class="tab tab-lifted">
+    Datos Personales
+  </a>
+  <a (click)="tabChange(2)" [ngClass]="{'tab-active': tab==2 , 'pointer-events-none': tab<2 && !id}" class="tab tab-lifted">
+    Datos Médicos
+  </a>
+  <a (click)="tabChange(3)" [ngClass]="{'tab-active': tab==3,'pointer-events-none': tab<3 && !id}" class="tab tab-lifted">
+    Datos Sociales
+  </a>
+</div>

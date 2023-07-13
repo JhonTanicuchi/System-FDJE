@@ -1,0 +1,10 @@
+<mat-form-field appearance="fill" class="w-full">
+  <mat-label>Parentesco</mat-label>
+  <mat-select
+    [formControl]="relationshipFormControl">
+    <mat-option *ngFor="let tipoParentesco of tiposParentesco"
+      [value]="tipoParentesco.value">{{tipoParentesco.value}}</mat-option>
+  </mat-select>
+  <mat-error *ngIf="relationshipFormControl.hasError('required')">Este campo es <strong>requerido</strong></mat-error>
+    <mat-hint *ngIf="tiposParentesco == null || tiposParentesco.length == 0">No hay valores de selección</mat-hint>
+</mat-form-field>

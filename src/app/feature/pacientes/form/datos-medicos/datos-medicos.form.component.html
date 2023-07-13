@@ -1,0 +1,805 @@
+<div formGroupName="medical_record">
+  <div class="grid grid-cols-5 gap-8 my-8">
+    <div class="col-span-1 text-neutral">
+      <h3 class="font-medium">Medidas Antropométricas</h3>
+      <p class="text-sm">Registrar las medidas actualizadas.</p>
+    </div>
+    <div
+      class="col-span-4 p-4 border border-[#535a6650] bg-[#ebecf090] rounded-md relative"
+    >
+      <div
+        *ngIf="loading"
+        class="absolute h-full w-full top-0 left-0 bg-[#535a6610] !backdrop-blur-md z-10"
+      >
+        <loader></loader>
+      </div>
+
+      <div class="grid grid-cols-4 gap-4">
+        <mat-form-field appearance="fill" class="w-full col-span-2">
+          <mat-label>Talla</mat-label>
+          <input
+            type="number"
+            matInput
+            formControlName="size"
+            [errorStateMatcher]="matcher"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <mat-error
+            *ngIf="
+              formGroup
+                .get('medical_record')
+                ?.get('size')
+                ?.hasError('minlength') ||
+              formGroup.get('medical_record')?.get('size')?.hasError('pattern')
+            "
+          >
+            Ingresa una medida <strong>valida</strong>
+          </mat-error>
+          <mat-error
+            *ngIf="
+              formGroup.get('medical_record')?.get('size')?.hasError('required')
+            "
+          >
+            Este campo es <strong>requerido</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="w-full col-span-2">
+          <mat-label>Peso</mat-label>
+          <input
+            type="number"
+            matInput
+            formControlName="weight"
+            [errorStateMatcher]="matcher"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <mat-error
+            *ngIf="
+              formGroup
+                .get('medical_record')
+                ?.get('weight')
+                ?.hasError('minlength') ||
+              formGroup
+                .get('medical_record')
+                ?.get('weight')
+                ?.hasError('pattern')
+            "
+          >
+            Ingresa una medida <strong>valida</strong>
+          </mat-error>
+          <mat-error
+            *ngIf="
+              formGroup
+                .get('medical_record')
+                ?.get('weight')
+                ?.hasError('required')
+            "
+          >
+            Este campo es <strong>requerido</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-5 gap-8 my-8">
+    <div class="col-span-1 text-neutral">
+      <h3 class="font-medium">Diabetes</h3>
+      <p class="text-sm">Ingrese los datos de diabetes del paciente</p>
+    </div>
+    <div
+      class="col-span-4 p-4 border border-[#535a6650] bg-[#ebecf090] rounded-md relative"
+    >
+      <div
+        *ngIf="loading"
+        class="absolute h-full w-full top-0 left-0 bg-[#535a6610] !backdrop-blur-md z-10"
+      >
+        <loader></loader>
+      </div>
+      <div>
+        <div class="grid grid-cols-6 gap-4">
+          <!-- combobox de tipo de diabetes -->
+          <combobox-tiposDiabetes
+            class="w-full col-span-3"
+            formControlName="diabetes_type"
+          ></combobox-tiposDiabetes>
+
+          <mat-form-field appearance="fill" class="w-full col-span-3">
+            <mat-label>Fecha de diagnostico</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              formControlName="diagnosis_date"
+              [errorStateMatcher]="matcher"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker disabled="false"></mat-datepicker>
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('diagnosis_date')
+                  ?.hasError('maxDateToday') &&
+                !formGroup
+                  .get('medical_record')
+                  ?.get('diagnosis_date')
+                  ?.hasError('required')
+              "
+            >
+              Ingresa una fecha <strong>valida</strong>
+            </mat-error>
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('diagnosis_date')
+                  ?.hasError('required')
+              "
+            >
+              Selecciona una <strong>fecha</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <combobox-tiemposDiagnostico
+            class="w-full col-span-3"
+            formControlName="diagnostic_period"
+          ></combobox-tiemposDiagnostico>
+
+          <mat-form-field appearance="fill" class="w-full col-span-3">
+            <mat-label
+              >Fecha del último examen de Hemoglobina Glicosilada</mat-label
+            >
+            <input
+              matInput
+              [matDatepicker]="picker1"
+              formControlName="last_hb_test"
+              [errorStateMatcher]="matcher"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker1"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('last_hb_test')
+                  ?.hasError('maxDateToday') &&
+                !formGroup
+                  .get('medical_record')
+                  ?.get('last_hb_test')
+                  ?.hasError('required')
+              "
+            >
+              Ingresa una fecha <strong>valida</strong>
+            </mat-error>
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('last_hb_test')
+                  ?.hasError('required')
+              "
+            >
+              Selecciona una <strong>fecha</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="w-full col-span-3">
+            <mat-label
+              >Valor del examen de Hemoglobina Glicosilada (HbA1c)%</mat-label
+            >
+            <input
+              type="number"
+              matInput
+              formControlName="hb_value"
+              [errorStateMatcher]="matcher"
+            />
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('hb_value')
+                  ?.hasError('min') ||
+                formGroup
+                  .get('medical_record')
+                  ?.get('hb_value')
+                  ?.hasError('max')
+              "
+            >
+              Intervalo permitido: <strong>4.5% hasta 25%</strong>
+            </mat-error>
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('hb_value')
+                  ?.hasError('required')
+              "
+            >
+              Este campo es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="w-full col-span-3">
+            <mat-label>¿Cuántas veces mide la glucosa en el día?</mat-label>
+            <input
+              type="number"
+              matInput
+              formControlName="glucose_checks"
+              [errorStateMatcher]="matcher"
+            />
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('hb_value')
+                  ?.hasError('min') ||
+                formGroup
+                  .get('medical_record')
+                  ?.get('hb_value')
+                  ?.hasError('max')
+              "
+            >
+              Ingrese un valor <strong>valido</strong>
+            </mat-error>
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('glucose_checks')
+                  ?.hasError('required')
+              "
+            >
+              Este campo es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <div
+            class="w-full h-[59.5px] col-span-2 text-xs text-neutral flex flex-col bg-[#eaeaed] pt-[12px] px-[12px] rounded-tl-[4px] rounded-tr-[4px]"
+          >
+            <label>¿Lleva un registro escrito? *</label>
+            <mat-radio-group
+              class="flex gap-4 my-[6px] text-sm"
+              color="primary"
+              formControlName="written_record"
+            >
+              <mat-radio-button value="si">Si</mat-radio-button>
+              <mat-radio-button value="no">No</mat-radio-button>
+              <mat-radio-button value="a veces">A veces</mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+          <div
+            class="w-full h-[59.5px] col-span-2 text-xs text-neutral flex flex-col bg-[#eaeaed] pt-[12px] px-[12px] rounded-tl-[4px] rounded-tr-[4px]"
+          >
+            <label>¿Puede medirse la glucosa solo? *</label>
+            <mat-radio-group
+              class="flex gap-4 my-[6px] text-sm"
+              color="primary"
+              formControlName="single_measurement"
+            >
+              <mat-radio-button value="si">Si</mat-radio-button>
+              <mat-radio-button value="no">No</mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+          <div
+            class="w-full h-[59.5px] col-span-2 text-xs text-neutral flex flex-col bg-[#eaeaed] pt-[12px] px-[12px] rounded-tl-[4px] rounded-tr-[4px] mb-3"
+          >
+            <label>¿Utiliza un sistema de monitoreo? *</label>
+            <mat-radio-group
+              class="flex gap-4 my-[6px] text-sm"
+              color="primary"
+              formControlName="monitoring_system"
+            >
+              <mat-radio-button value="si">Si</mat-radio-button>
+              <mat-radio-button value="no">No</mat-radio-button>
+            </mat-radio-group>
+            <mat-hint>Freestyle libre, etc.</mat-hint>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="grid grid-cols-5 gap-8 my-8">
+    <div class="col-span-1 text-neutral">
+      <h3 class="font-medium">Dosis de Insulinas</h3>
+      <p class="text-sm">Ingrese la dosis de insulina que toma el paciente</p>
+    </div>
+    <div
+      class="col-span-4 p-4 border border-[#535a6650] bg-[#ebecf090] rounded-md relative"
+    >
+      <div
+        *ngIf="loading"
+        class="absolute h-full w-full top-0 left-0 bg-[#535a6610] !backdrop-blur-md z-10"
+      >
+        <loader></loader>
+      </div>
+      <div>
+        <div class="grid grid-cols-12 gap-4">
+          <combobox-tiposInsulinaBasal
+            class="w-full col-span-4"
+            formControlName="basal_insulin_type"
+          ></combobox-tiposInsulinaBasal>
+
+          <mat-form-field appearance="fill" class="w-full-width col-span-4">
+            <mat-label>Dosis mañana</mat-label>
+            <input
+              type="number"
+              matInput
+              formControlName="morning_basal_dose"
+              [errorStateMatcher]="matcher"
+            />
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('morning_basal_dose')
+                  ?.hasError('min') ||
+                formGroup
+                  .get('medical_record')
+                  ?.get('morning_basal_dose')
+                  ?.hasError('max')
+              "
+            >
+              Ingrese un valor <strong>valido</strong>
+            </mat-error>
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('morning_basal_dose')
+                  ?.hasError('required')
+              "
+            >
+              Este campo es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="w-full col-span-4">
+            <mat-label>Dosis noche</mat-label>
+            <input
+              type="number"
+              matInput
+              formControlName="evening_basal_dose"
+              [errorStateMatcher]="matcher"
+            />
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('evening_basal_dose')
+                  ?.hasError('min') ||
+                formGroup
+                  .get('medical_record')
+                  ?.get('evening_basal_dose')
+                  ?.hasError('max')
+              "
+            >
+              Ingrese un valor <strong>valido</strong>
+            </mat-error>
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('evening_basal_dose')
+                  ?.hasError('required')
+              "
+            >
+              Este campo es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-divider class="row-start-2 row-end-2 col-span-12"></mat-divider>
+
+          <combobox-tiposInsulinaPrandial
+            class="w-full row-start-3 col-span-4"
+            formControlName="prandial_insulin_type"
+          ></combobox-tiposInsulinaPrandial>
+
+          <mat-form-field
+            appearance="fill"
+            class="w-full row-start-3 col-span-2"
+          >
+            <mat-label>Dosis desayuno</mat-label>
+            <input
+              type="number"
+              matInput
+              formControlName="breakfast_prandial_dose"
+              [errorStateMatcher]="matcher"
+            />
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('breakfast_prandial_dose')
+                  ?.hasError('min') ||
+                formGroup
+                  .get('medical_record')
+                  ?.get('breakfast_prandial_dose')
+                  ?.hasError('max')
+              "
+            >
+              Ingrese un valor <strong>valido</strong>
+            </mat-error>
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('breakfast_prandial_dose')
+                  ?.hasError('required')
+              "
+            >
+              Este campo es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field
+            appearance="fill"
+            class="w-full row-start-3 col-span-2"
+          >
+            <mat-label>Dosis almuerzo</mat-label>
+            <input
+              type="number"
+              matInput
+              formControlName="lunch_prandial_dose"
+              [errorStateMatcher]="matcher"
+            />
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('lunch_prandial_dose')
+                  ?.hasError('min') ||
+                formGroup
+                  .get('medical_record')
+                  ?.get('lunch_prandial_dose')
+                  ?.hasError('max')
+              "
+            >
+              Ingrese un valor <strong>valido</strong>
+            </mat-error>
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('lunch_prandial_dose')
+                  ?.hasError('required')
+              "
+            >
+              Este campo es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field
+            appearance="fill"
+            class="w-full row-start-3 col-span-2"
+          >
+            <mat-label>Dosis cena</mat-label>
+            <input
+              type="number"
+              matInput
+              formControlName="dinner_prandial_dose"
+              [errorStateMatcher]="matcher"
+            />
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('dinner_prandial_dose')
+                  ?.hasError('min') ||
+                formGroup
+                  .get('medical_record')
+                  ?.get('dinner_prandial_dose')
+                  ?.hasError('max')
+              "
+            >
+              Ingrese un valor <strong>valido</strong>
+            </mat-error>
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('dinner_prandial_dose')
+                  ?.hasError('required')
+              "
+            >
+              Este campo es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field
+            appearance="fill"
+            class="w-full row-start-3 col-span-2"
+          >
+            <mat-label>Corrección</mat-label>
+            <input
+              type="number"
+              matInput
+              formControlName="correction_prandial_dose"
+              [errorStateMatcher]="matcher"
+            />
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('correction_prandial_dose')
+                  ?.hasError('min') ||
+                formGroup
+                  .get('medical_record')
+                  ?.get('correction_prandial_dose')
+                  ?.hasError('max')
+              "
+            >
+              Ingrese un valor <strong>valido</strong>
+            </mat-error>
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('correction_prandial_dose')
+                  ?.hasError('required')
+              "
+            >
+              Este campo es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="grid grid-cols-5 gap-8 my-8">
+    <div class="col-span-1 text-neutral">
+      <h3 class="font-medium">Atención médica</h3>
+      <p class="text-sm">
+        Ingrese los detalles la atención médica que recibe el paciente
+      </p>
+    </div>
+    <div
+      class="col-span-4 p-4 border border-[#535a6650] bg-[#ebecf090] rounded-md relative"
+    >
+      <div
+        *ngIf="loading"
+        class="absolute h-full w-full top-0 left-0 bg-[#535a6610] !backdrop-blur-md z-10"
+      >
+        <loader></loader>
+      </div>
+      <div>
+        <div class="grid grid-cols-6 gap-4">
+          <combobox-tiposHospital
+            class="w-full col-span-2"
+            formControlName="hospital_type"
+          ></combobox-tiposHospital>
+          <combobox-hospitales
+            class="w-full col-span-2"
+            formControlName="hospital"
+          ></combobox-hospitales>
+          <combobox-medicos
+            class="w-full col-span-2"
+            formControlName="doctor"
+          ></combobox-medicos>
+
+          <mat-form-field appearance="fill" class="w-full col-span-3">
+            <mat-label
+              >Fecha de la última visita al médico especialista</mat-label
+            >
+            <input
+              matInput
+              [matDatepicker]="picker2"
+              formControlName="last_visit"
+              [errorStateMatcher]="matcher"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker2"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker2 disabled="false"></mat-datepicker>
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('last_visit')
+                  ?.hasError('maxDateToday') &&
+                !formGroup
+                  .get('medical_record')
+                  ?.get('last_visit')
+                  ?.hasError('required')
+              "
+            >
+              Ingresa una fecha <strong>valida</strong>
+            </mat-error>
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('last_visit')
+                  ?.hasError('required')
+              "
+            >
+              Selecciona una <strong>fecha</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="w-full col-span-3">
+            <mat-label
+              >¿Alguna otra enfermedad a parte de la diabetes?</mat-label
+            >
+            <input
+              type="text"
+              matInput
+              formControlName="other_disease"
+              [errorStateMatcher]="matcher"
+            />
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('other_disease')
+                  ?.hasError('required')
+              "
+            >
+              Este campo es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="grid grid-cols-5 gap-8 my-8">
+    <div class="col-span-1 text-neutral">
+      <h3 class="font-medium">Casos de emergencia</h3>
+      <p class="text-sm">
+        Ingrese los detalles de los casos de emergencia que ha tenido el
+        paciente
+      </p>
+    </div>
+    <div
+      class="col-span-4 p-4 border border-[#535a6650] bg-[#ebecf090] rounded-md relative"
+    >
+      <div
+        *ngIf="loading"
+        class="absolute h-full w-full top-0 left-0 bg-[#535a6610] !backdrop-blur-md z-10"
+      >
+        <loader></loader>
+      </div>
+      <div>
+        <div class="grid grid-cols-6 gap-4">
+          <div
+            class="w-full h-[59.5px] col-span-3 text-xs text-neutral flex flex-col bg-[#eaeaed] pt-[12px] px-[12px] rounded-tl-[4px] rounded-tr-[4px]"
+          >
+            <label>¿Ha convulsionado alguna vez en su vida? *</label>
+            <mat-radio-group
+              aria-label="Select an option"
+              class="flex gap-4 my-[6px] text-sm"
+              color="primary"
+              formControlName="has_convulsions"
+            >
+              <mat-radio-button value="si">Si</mat-radio-button>
+              <mat-radio-button value="no">No</mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+          <div
+            class="w-full h-[59.5px] col-span-3 text-xs text-neutral flex flex-col bg-[#eaeaed] pt-[12px] px-[12px] rounded-tl-[4px] rounded-tr-[4px]"
+          >
+            <label>¿Presenta síntomas frente a una hipoglucemia? *</label>
+            <mat-radio-group
+              class="flex gap-4 my-[6px] text-sm"
+              color="primary"
+              formControlName="hypoglycemia_symptoms"
+            >
+              <mat-radio-button value="si">Si</mat-radio-button>
+              <mat-radio-button value="no">No</mat-radio-button>
+              <mat-radio-button value="a veces">A veces</mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+          <mat-form-field appearance="fill" class="w-full col-span-3">
+            <mat-label>¿Cuántas hipoglucemias tuvo la semana pasada?</mat-label>
+            <input
+              type="number"
+              matInput
+              formControlName="hypoglycemia_frequency"
+            />
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('hypoglycemia_frequency')
+                  ?.hasError('required')
+              "
+            >
+              Este campo es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="w-full col-span-3">
+            <mat-label>¿Cuál fue número más bajo de hipoglucemia?</mat-label>
+            <input type="number" matInput formControlName="min_hypoglycemia" />
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('min_hypoglycemia')
+                  ?.hasError('required')
+              "
+            >
+              Este campo es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="w-full col-span-6">
+            <mat-label
+              >¿Cuándo tiene hipoglucemias qué suele
+              hacer/administrar?</mat-label
+            >
+            <input
+              type="text"
+              matInput
+              formControlName="hypoglycemia_treatment"
+              [errorStateMatcher]="matcher"
+            />
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('medical_record')
+                  ?.get('hypoglycemia_treatment')
+                  ?.hasError('required')
+              "
+            >
+              Este campo es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="grid grid-cols-5 gap-8 my-8">
+    <div class="col-span-1 text-neutral">
+      <h3 class="font-medium">Programa</h3>
+      <p class="text-sm">
+        Defina el tipo de programa o ayuda que desea recibir de la fundación.
+      </p>
+    </div>
+    <div
+      class="col-span-4 p-4 border border-[#535a6650] bg-[#ebecf090] rounded-md relative"
+    >
+      <div
+        *ngIf="loading"
+        class="absolute h-full w-full top-0 left-0 bg-[#535a6610] !backdrop-blur-md z-10"
+      >
+        <loader></loader>
+      </div>
+      <div>
+        <div class="grid grid-cols-6 gap-4">
+          <combobox-tiposInformacionAyuda
+            class="w-full col-span-6"
+            formControlName="assistance_type"
+          ></combobox-tiposInformacionAyuda>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

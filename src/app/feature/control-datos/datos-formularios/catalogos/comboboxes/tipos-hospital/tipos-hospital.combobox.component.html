@@ -1,0 +1,10 @@
+<mat-form-field appearance="fill" class="w-full">
+  <mat-label>Tipo de hospital</mat-label>
+  <mat-select [formControl]="hospitalTypeFormControl">
+    <mat-option *ngFor="let tipoHospital of tiposHospital"
+      [value]="tipoHospital.id">{{tipoHospital.value}}</mat-option>
+  </mat-select>
+  <mat-error *ngIf="hospitalTypeFormControl.hasError('required')">Este campo es <strong>requerido</strong></mat-error>
+  <mat-hint *ngIf="tiposHospital == null || tiposHospital.length == 0">No hay valores de selección</mat-hint>
+</mat-form-field>
+

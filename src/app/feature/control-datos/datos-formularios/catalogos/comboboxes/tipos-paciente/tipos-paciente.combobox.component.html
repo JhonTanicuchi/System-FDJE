@@ -1,0 +1,8 @@
+<mat-form-field appearance="fill" class="w-full">
+  <mat-label>Tipo de paciente</mat-label>
+  <mat-select [formControl]="patientTypeFormControl">
+    <mat-option *ngFor="let patientType of patientTypes" [value]="patientType.id">{{patientType.value}}</mat-option>
+  </mat-select>
+  <mat-error *ngIf="patientTypeFormControl.hasError('required')">Este campo es <strong>requerido</strong></mat-error>
+  <mat-hint *ngIf="patientTypes == null || patientTypes.length == 0">No hay tipos de paciente</mat-hint>
+</mat-form-field>

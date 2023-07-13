@@ -1,0 +1,55 @@
+<div class="bg-[#ebecf0] border-[#535a6630] border-[1px] p-4 relative rounded-md overflow-hidden" *permissions = "['CREAR_CATALOGOS','ACTUALIZAR_CATALOGOS']" >
+
+  <div *ngIf="loading" class="absolute h-full w-full top-0 left-0 bg-[#535a6610] !backdrop-blur-sm z-10">
+    <loader></loader>
+  </div>
+
+  <!--Titulo dinámico dependiendo de si el currentCatalog tiene id o no-->
+  <div class="text-neutral flex items-center">
+    <span class="fas fa-database text-base leading-none mr-2"></span>
+    <h3 *ngIf="!currentCatalog.id" class="text-base leading-none">Crear nuevo</h3>
+    <h3 *ngIf="currentCatalog.id" class="text-base leading-none">Editar</h3>
+  </div>
+
+  <form #form="ngForm" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+
+    <!-- input de valor -->
+    <mat-form-field class="w-full mt-3 text-neutral">
+      <mat-label>Nombre</mat-label>
+      <div class="flex items-center">
+        <input type="text" matInput formControlName="value" [errorStateMatcher]="matcher">
+        <div *ngIf="(formGroup.statusChanges | async) === 'PENDING'">
+          <h1 class="text-xs text-primary">Comprobando...</h1>
+        </div>
+      </div>
+      <mat-error *ngIf="formGroup.get('value')?.hasError('checkCatalogValueIsAvailable')">
+        Este valor <strong>ya esta registrado</strong>
+      </mat-error>
+      <mat-error
+        *ngIf="formGroup.get('value')?.hasError('minlength') || formGroup.get('value')?.hasError('maxlength') && !formGroup.get('value')?.hasError('checkCatalogValueIsAvailable')">
+        Este valor es <strong>invalido</strong>
+      </mat-error>
+      <mat-error *ngIf="formGroup.get('value')?.hasError('required')">
+        Este campo es <strong>requerido</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <!--Botones dinámicos dependiendo de si el currentCatalog tiene id o no-->
+    <div class="w-full flex justify-between">
+      <div>
+        <a *ngIf="currentCatalog.id" (click)="clearCatalog()" class="text-xs cursor-pointer text-error">cancelar</a>
+      </div>
+      <div>
+        <button *ngIf="!currentCatalog.id" type="submit" [disabled]="!formGroup.valid"
+          [ngClass]="{ '!text-white !bg-neutral opacity-80': !formGroup.valid }"
+          class="btn btn-primary btn-sm text-xs rounded-md">Crear</button>
+        <button *ngIf="currentCatalog.id" type="button" class="btn btn-outline btn-error btn-sm text-xs rounded-md mr-2"
+          (click)="deleteCatalog(currentCatalog)">Eliminar</button>
+        <button *ngIf="currentCatalog.id" type="submit" [disabled]="!formGroup.valid"
+          [ngClass]="{ '!text-white !bg-neutral opacity-80': !formGroup.valid }"
+          class="btn btn-primary btn-sm text-xs rounded-md">Actualizar</button>
+      </div>
+    </div>
+  </form>
+
+</div>

@@ -1,0 +1,116 @@
+<div class="pt-20 pb-10 px-60 bg-neutral-content relative">
+
+  <div class="w-full h-52 px-60 py-6 bg-primary absolute top-0 left-0">
+    <div class="h-full w-full relative">
+      <div class="flex items-center">
+        <a href="https://fdje.org"><img src="/assets/images/favicon.png" alt="fdje" class="w-10" /></a>
+        <a class="flex flex-col text-white text-sm font-bold ml-2 hover:opacity-90 leading-4" href="https://fdje.org">
+          <span>Fundación Diabetes</span>
+          <span>Juvenil del Ecuador</span>
+        </a>
+      </div>
+
+      <div class="flex justify-start items-center text-white absolute bottom-0">
+        <span class="las la-file-invoice text-6xl"></span>
+        <div class="ml-2">
+          <h1 class="text-2xl">Formulario de registro</h1>
+          <p class="text-sm opacity-80">El siguiente formulario nos permite conocer de mejor manera cómo podemos
+            ayudarle.</p>
+        </div>
+      </div>
+
+      <div class="w-[calc(100%+30rem)] flex absolute -bottom-3 -left-60">
+        <span class="h-0.5 w-1/2 bg-[#FFDD00]"></span>
+        <span class="h-0.5 w-1/4 bg-[#034EA2]"></span>
+        <span class="h-0.5 w-1/4 bg-[#ED1C24]"></span>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="bg-white p-8 rounded-md mt-44 mb-8 border border-[#535a6650] relative">
+    <div class="w-full absolute -top-11 left-0 flex justify-center items-center">
+      <ul class="steps steps-vertical lg:steps-horizontal">
+        <li class="step step-white" [ngClass]="{'!step-primary': tab>=1}"></li>
+        <li class="step step-white" [ngClass]="{'!step-primary': tab>=2}"></li>
+        <li class="step step-white" [ngClass]="{'!step-primary': tab>=3}"></li>
+      </ul>
+    </div>
+    <form class="w-full" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+      <div [ngClass]="{ block: tab==1, hidden: tab!=1 }">
+        <datos-personales-form [formGroup]="formGroup"></datos-personales-form>
+      </div>
+
+      <div [ngClass]="{ block: tab==2, hidden: tab!=2 }">
+        <datos-medicos-form [formGroup]="formGroup"></datos-medicos-form>
+      </div>
+
+      <div [ngClass]="{ block: tab==3, hidden: tab!=3 }">
+        <datos-sociales-form [formGroup]="formGroup"></datos-sociales-form>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="mb-8 mt-8 w-full flex justify-between items-center">
+        <div class="flex justify-between items-center gap-4">
+        </div>
+        <div class="flex justify-between items-center gap-4">
+          <button (click)="previousTab()" type="button" *ngIf="tab!=1"
+            class="btn btn-outline btn-primary text-xs text-primary rounded-md  flex justify-center items-center">
+            <div class="flex justify-center items-center gap-2">
+              <span class="fa-solid fa-arrow-left-long text-sm"></span>
+              <span>Atrás</span>
+            </div>
+          </button>
+
+          <button type="button" class="btn btn-primary text-xs rounded-md border-0 flex justify-center items-center"
+            *ngIf="tab==1" (click)="nextTab()"
+            [disabled]="!formGroup.get('person')?.valid || !formGroup.get('email')?.valid"
+            [ngClass]="{'!text-white !bg-neutral opacity-80': !formGroup.get('person')?.valid || !formGroup.get('email')?.valid}">
+            <div class="flex justify-center items-center gap-2">
+              <span class="fa-solid fa-arrow-right-long text-sm"></span>
+              Siguiente
+            </div>
+          </button>
+
+          <button type="button" class="btn btn-primary text-xs rounded-md border-0 flex justify-center items-center"
+            *ngIf="tab==2" (click)="nextTab()" [disabled]="!formGroup.get('medical_record')?.valid"
+            [ngClass]="{'!text-white !bg-neutral opacity-80': !formGroup.get('medical_record')?.valid}">
+            <div class="flex justify-center items-center gap-2">
+              <span class="fa-solid fa-arrow-right-long text-sm"></span>
+              Siguiente
+            </div>
+          </button>
+
+          <button type="submit" class="btn btn-primary text-xs rounded-md border-0 flex justify-center items-center"
+            *ngIf="tab==3" [disabled]="!formGroup.valid"
+            [ngClass]="{'!text-white !bg-neutral opacity-80': !formGroup.valid}">
+            <div class="flex justify-center items-center gap-2">
+              <span class="fa-solid fa-floppy-disk text-sm"></span>
+              <span>Guardar</span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="w-full flex justify-center items-center flex-col text-neutral">
+    <div class="text-xl flex gap-2 ">
+      <a href="https://www.facebook.com/fdjecuador"><i class="fa-brands fa-facebook"></i></a>
+      <a href="https://twitter.com/FDJECUADOR"><i class="fa-brands fa-twitter"></i></a>
+      <a href="https://www.instagram.com/diabetesjuvenilecuador/"><i class="fa-brands fa-instagram"></i></a>
+      <a href="https://www.youtube.com/channel/UCh2mvgQ7Cd6dW52o1-D3eDQ"><i class="fa-brands fa-youtube"></i></a>
+      <a href="http://diabetestipo1ecuador.blogspot.com/"><i class="fa-brands fa-blogger-b"></i></a>
+      <a
+        href="https://api.whatsapp.com/send/?phone=593998740762&text=Fundaci%C3%B3n%20Diabetes%20Juvenil.&app_absent=0"><i
+          class="fa-brands fa-whatsapp"></i></a>
+    </div>
+
+    <div class="text-sm opacity-80 text-center flex justify-center items-center flex-col">
+      <p class="text-sm mb-4">© 2023 FDJE, Inc. Todos los derechos reservados.</p>
+      <p class="text-xs">Contenido creado y aprobado por</p>
+      <a href="https://www.facebook.com/fdjecuador" class="text-xs">Fundación Diabetes Juvenil del Ecuador</a>
+    </div>
+  </div>
+</div>

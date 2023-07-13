@@ -1,0 +1,151 @@
+<div class="flex mt-4" *permissions="['LEER_CATALOGOS']">
+  <div class="bg-white w-2/4">
+    <div>
+      <div class="px-4 py-1 text-xs">
+        <h3 class="font-medium">
+          <span class="font-bold">{{ catalogs.length }}</span> Datos
+        </h3>
+      </div>
+      <div class="overflow-hidden relative rounded-md">
+        <div
+          class="min-h-[calc(100vh-4rem-23rem-21.5px)] relative overflow-hidden bg-neutral-content border border-[#535a6650] rounded-md mb-4"
+        >
+          <table class="my_table w-full text-sm text-left text-neutral">
+            <thead class="text-xs text-white uppercase bg-primary">
+              <tr>
+                <th scope="col" class="py-3 px-6">#</th>
+                <th scope="col" class="py-3 px-6">
+                  <div class="flex items-center">
+                    Nombre
+                    <a
+                      class="cursor-pointer ml-1"
+                      *ngIf="reverse && catalogs.length > 1"
+                      (click)="reverseOrder()"
+                    >
+                      <!-- Icono para indicar orden ascendente-->
+                      <span class="fa-solid fa-caret-up"></span>
+                    </a>
+                    <a
+                      class="cursor-pointer ml-1"
+                      *ngIf="!reverse && catalogs.length > 1"
+                      (click)="reverseOrder()"
+                    >
+                      <!-- Icono para indicar orden descendente-->
+                      <span class="fa-solid fa-caret-down"></span>
+                    </a>
+                  </div>
+                </th>
+                <th
+                  scope="col"
+                  class="py-3 px-6"
+                  *permissions="['ACTUALIZAR_CATALOGOS', 'ELIMINAR_CATALOGOS']"
+                >
+                  <span class="sr-only">Acciones</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y-[0.5px] divide-[#535A6640]">
+              <tr
+                class="bg-white hover:bg-[#4052b510] transition-all"
+                [ngClass]="{
+                  '!bg-[#4052b530]': currentCatalog.id == catalog.id
+                }"
+                *ngFor="
+                  let catalog of catalogs | paginate : config;
+                  let index = index
+                "
+              >
+                <th
+                  scope="row"
+                  class="py-[10.5px] px-6 font-medium text-neutral whitespace-nowrap"
+                >
+                  <!-- Condicional para indicar el numero de orden, ascendente o descendente según la configuración-->
+                  <span *ngIf="!reverse">{{
+                    config.itemsPerPage * (config.currentPage - 1) + index + 1
+                  }}</span>
+                  <span *ngIf="reverse">{{
+                    catalogs.length -
+                      (config.itemsPerPage * (config.currentPage - 1) + index)
+                  }}</span>
+                </th>
+                <td class="py-[10.5px] px-6">
+                  <span>{{ catalog.value }}</span
+                  ><!-- Valor del catalogo-->
+                </td>
+                <th
+                  class="py-[10.5px] px-6 text-right"
+                  *permissions="['ACTUALIZAR_CATALOGOS', 'ELIMINAR_CATALOGOS']"
+                >
+                  <!-- Icono para editar un catálogo, deshabilitado si el catálogo actual está siendo editado -->
+                  <span
+                    (click)="editCatalog(catalog)"
+                    [ngClass]="{
+                      'opacity-50 pointer-events-none':
+                        currentCatalog.id && currentCatalog.id == catalog.id
+                    }"
+                    class="fa-regular fa-pen-to-square text-lg cursor-pointer transition-all hover:text-primary"
+                    *permissions="['ACTUALIZAR_CATALOGOS']"
+                  ></span>
+                  <!-- Icono para eliminar un catálogo, deshabilitado si el catálogo actual está siendo editado -->
+                  <span
+                    (click)="deleteCatalogo(catalog)"
+                    [ngClass]="{
+                      'opacity-50 pointer-events-none':
+                        currentCatalog.id && currentCatalog.id == catalog.id
+                    }"
+                    class="fa-regular fa-trash-can text-lg ml-3 cursor-pointer transition-all hover:text-red-600"
+                    *permissions="['ELIMINAR_CATALOGOS']"
+                  ></span>
+                </th>
+              </tr>
+            </tbody>
+          </table>
+          <div
+            *ngIf="loading || catalogs.length == 0"
+            class="h-[calc(100%)] w-full absolute z-10 top-0 left-0"
+          >
+            <div
+              *ngIf="loading"
+              class="h-full w-full bg-[#535a6610] backdrop-blur-sm"
+            >
+              <!-- Componente para mostrar un loader mientras se carga el contenido -->
+              <loader></loader>
+            </div>
+
+            <!-- Componente para mostrar mensaje de contenido no disponible -->
+            <no-content *ngIf="catalogs.length == 0 && !loading"></no-content>
+          </div>
+        </div>
+
+        <!-- Componente de paginación -->
+        <pagination [config]="config"></pagination>
+      </div>
+    </div>
+  </div>
+
+  <div class="w-2/4 flex flex-col items-end justify-between mt-6">
+    <!-- Componente para filtrar los catálogos por termino -->
+    <div class="relative w-full max-w-xs">
+      <div
+        class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none"
+      >
+        <span class="fa-solid fa-magnifying-glass"></span>
+      </div>
+      <input
+        type="text"
+        id="table-search"
+        #search
+        (keyup)="searchCatalogosByTerm(type, search.value)"
+        class="input input-sm block h-8 p-2 pl-10 w-full max-w-xs text-sm text-neutral bg-[#ebecf0] !border-[#535A6640] rounded-md border !outline-[#535A6620]"
+        placeholder="Buscar"
+      />
+    </div>
+
+    <div class="">
+      <h1 class="text-neutral text-sm">
+        Sumatoria de catálogos:
+        <span class="font-normal">{{ totalCatalogs }}</span>
+      </h1>
+    </div>
+  </div>
+</div>

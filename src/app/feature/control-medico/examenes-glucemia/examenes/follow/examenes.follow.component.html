@@ -1,0 +1,233 @@
+<module-header title="Exámenes">
+  <examen-glucemia-breadcrumbs breadcrumbs>
+     <li>
+      <a
+        routerLink="/system/control-medico/examenes-glucemia/examenes"
+        >Exámenes</a
+      >
+    </li>
+    <li>
+      <a
+        routerLink="/system/control-medico/examenes-glucemia/examenes"
+        >Seguimiento</a
+      >
+    </li>
+  </examen-glucemia-breadcrumbs>
+  <examen-glucemia-tabs tabs route="examenes"></examen-glucemia-tabs>
+</module-header>
+
+<div
+  class="w-full h-[calc(100vh-4rem-9rem+4px)] p-4 bg-white border-t-[1px] border-[#535a6650]"
+>
+  <div class="flex justify-between my-4">
+    <div class="w-1/2">
+      <div class="relative">
+        <div
+          class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none"
+        >
+          <span class="fa-solid fa-magnifying-glass"></span>
+        </div>
+        <input
+          type="text"
+          id="table-search"
+          #search
+          (keyup)="searchTestsWithPatientsByTerm(search.value)"
+          class="input input-sm block h-8 p-2 pl-10 w-full max-w-xs text-sm text-neutral bg-[#ebecf0] !border-[#535A6640] rounded-md border !outline-[#535A6620]"
+          placeholder="Buscar"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="px-4 py-1 text-xs">
+      <h3 class="font-medium">
+        <span class="font-bold">{{ testsPatient.length }}</span> Pacientes
+      </h3>
+    </div>
+    <div class="overflow-hidden relative rounded-md">
+      <div class="min-h-[calc(100vh-4rem-20rem)] overflow-hidden bg-neutral-content border border-[#535a6650] rounded-md relative mb-4">
+        <table class="my_table w-full text-sm text-left text-neutral">
+          <thead class="text-xs text-white uppercase bg-primary">
+            <tr>
+              <th scope="col" class="py-3 px-6">#</th>
+              <th scope="col" class="py-3 px-6">
+                <div class="flex items-center">
+                  Nombres y Apellidos
+                  <a
+                    class="cursor-pointer ml-1"
+                    *ngIf="reverse && testsPatient.length > 1"
+                    (click)="reversOrder()"
+                  >
+                    <span class="fa-solid fa-caret-up"></span>
+                  </a>
+                  <a
+                    class="cursor-pointer ml-1"
+                    *ngIf="!reverse && testsPatient.length > 1"
+                    (click)="reversOrder()"
+                  >
+                    <span class="fa-solid fa-caret-down"></span>
+                  </a>
+                </div>
+              </th>
+              <th scope="col" class="py-3 px-6">Identificación</th>
+              <th scope="col" class="py-3 px-6">Fecha de entrega</th>
+              <th scope="col" class="py-3 px-6">Ultima actualización</th>
+              <th scope="col" class="py-3 px-6">Exámenes</th>
+              <th scope="col" class="py-3 px-6">Estado</th>
+              <th
+                scope="col"
+                class="py-3 px-6 w-10"
+                *permissions="['CREAR_EXAMENES', 'ACTUALIZAR_EXAMENES']"
+              >
+                <span class="sr-only">Acciones</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y-[0.5px] divide-[#535A6640]">
+            <tr
+              class="bg-white hover:bg-[#4052b510] transition-all"
+              [ngClass]="{
+                'bg-red-50 !text-red-400 hover:!bg-red-100 ':
+                  testPatient.test.archived
+              }"
+              *ngFor="
+                let testPatient of testsPatient | paginate : config;
+                let index = index
+              "
+            >
+              <th scope="row" class="py-3 px-6 font-medium whitespace-nowrap">
+                <!-- Indice en orden ascendente -->
+                <span *ngIf="!reverse">{{
+                  config.itemsPerPage * (config.currentPage - 1) + index + 1
+                }}</span>
+                <!-- indice en orden descentente -->
+                <span *ngIf="reverse">{{
+                  testsPatient.length -
+                    (config.itemsPerPage * (config.currentPage - 1) + index)
+                }}</span>
+              </th>
+              <td class="py-3 px-6 font-medium whitespace-nowrap capitalize">
+                <span>{{
+                  testPatient.patient.person | NamesSurnamesComplete
+                }}</span>
+              </td>
+              <td class="py-3 px-6">
+                <span>{{ testPatient.patient.person.identification }}</span>
+              </td>
+              <td class="py-3 px-6">
+                <span *ngIf="testPatient.test.created_at">
+                  {{
+                    testPatient.test.created_at | date : "dd-MM-yyyy HH:mm:ss"
+                  }}
+                </span>
+                <span *ngIf="!testPatient.test.updated_at"> --- </span>
+              </td>
+              <td class="py-3 px-6 capitalize">
+                <span *ngIf="testPatient.test.updated_at">
+                  {{ testPatient.test.updated_at | TimeAgo }}
+                </span>
+                <span *ngIf="!testPatient.test.updated_at"> --- </span>
+              </td>
+              <td class="py-3 px-6 capitalize">
+                <span *ngIf="testPatient.exams_missing">
+                  {{ testPatient.exams_missing }} pendientes
+                </span>
+                <span *ngIf="!testPatient.exams_missing"> 5 entregados </span>
+              </td>
+              <th class="py-3 px-6 font-medium">
+                <div
+                  *ngIf="
+                    testPatient.test.delivered &&
+                    !testPatient.test.archived &&
+                    !testPatient.exams_missing
+                  "
+                  class="flex items-center"
+                >
+                  <span
+                    class="fa-solid fa-circle-check text-[#00BC8C] h-2.5 w-2.5 mr-2"
+                  ></span
+                  >Entregado
+                </div>
+                <div
+                  *ngIf="
+                    testPatient.test.delivered &&
+                    testPatient.exams_missing &&
+                    !testPatient.test.archived
+                  "
+                  class="flex items-center capitalize"
+                >
+                  <span
+                    class="fa-solid fa-circle-exclamation text-[#f39c11] h-2.5 w-2.5 mr-2"
+                  ></span
+                  >Pendiente
+                </div>
+                <div
+                  *ngIf="!testPatient.test.delivered"
+                  class="flex items-center"
+                >
+                  <span
+                    class="fa-solid fa-ban text-[#11a0f3] h-2.5 w-2.5 mr-2"
+                  ></span
+                  >Sin exámenes
+                </div>
+                <div
+                  *ngIf="testPatient.test.archived"
+                  class="flex items-center"
+                >
+                  <span
+                    class="fa-solid fa-trash-can text-[#f32011] h-2.5 w-2.5 mr-2"
+                  ></span
+                  >Archivado
+                </div>
+              </th>
+              <th
+                class="py-3 px-6 text-right w-10"
+                *permissions="['CREAR_EXAMENES', 'ACTUALIZAR_EXAMENES']"
+              >
+                <div *ngIf="!testPatient.test.delivered">
+                  <span
+                    *permissions="['CREAR_EXAMENES']"
+                    [routerLink]="[
+                      '/system/control-medico/examenes-glucemia/examenes/form/paciente/',
+                      testPatient.patient.id,
+                      'hemoglobina'
+                    ]"
+                    class="fa-regular fa-square-plus text-lg ml-3 cursor-pointer transition-all hover:text-primary"
+                  ></span>
+                </div>
+
+                <div *ngIf="testPatient.test.delivered">
+                  <span
+                    *permissions="['ACTUALIZAR_EXAMENES']"
+                    [routerLink]="[
+                      '/system/control-medico/examenes-glucemia/examenes/form/paciente/',
+                      testPatient.patient.id,
+                      'examen',
+                      testPatient.test.id
+                    ]"
+                    class="fa-regular fa-pen-to-square text-lg cursor-pointer transition-all hover:text-primary"
+                  ></span>
+                </div>
+              </th>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          *ngIf="loading || testsPatient.length == 0"
+          class="h-[calc(100%)] w-full absolute z-10 top-0 left-0"
+        >
+          <div
+            *ngIf="loading"
+            class="h-full w-full bg-[#535a6610] backdrop-blur-sm"
+          >
+            <loader></loader>
+          </div>
+          <no-content *ngIf="testsPatient.length == 0 && !loading"></no-content>
+        </div>
+      </div>
+      <!-- Navegacion de tabla -->
+      <pagination [config]="config"></pagination>
+    </div>
+  </div>
+</div>

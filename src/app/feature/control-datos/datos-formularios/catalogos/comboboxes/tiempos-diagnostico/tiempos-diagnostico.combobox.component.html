@@ -1,0 +1,11 @@
+<mat-form-field appearance="fill" class="w-full">
+  <mat-label>Hace cuánto tiempo fue diagnosticado/a?</mat-label>
+  <mat-select
+    [formControl]="diagnosticPeriodFormControl">
+    <mat-option *ngFor="let tiempoDiagnostico of tiemposDiagnostico"
+      [value]="tiempoDiagnostico.id">{{tiempoDiagnostico.value}}</mat-option>
+  </mat-select>
+  <mat-error *ngIf="diagnosticPeriodFormControl.hasError('required')">Este campo es <strong>requerido</strong></mat-error>
+  <mat-hint *ngIf="tiemposDiagnostico == null ||
+      tiemposDiagnostico.length == 0">No hay valores de selección</mat-hint>
+</mat-form-field>

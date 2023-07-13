@@ -1,0 +1,7 @@
+#sidebar li a.active {
+  text-decoration: underline;
+}
+
+#sidebar li a.active ~ div > div span.active {
+  display: flex !important;
+}

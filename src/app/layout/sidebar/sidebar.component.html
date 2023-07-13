@@ -1,0 +1,246 @@
+<!-- SIDEBAR -->
+<div id="sidebar" class="shadow-xl h-screen overflow-hidden bg-white">
+  <div class="h-16 flex border-b border-x-stone-700 items-center">
+    <a href="https://fdje.org">
+      <img
+        src="https://fdje.org/wp-content/uploads/2022/06/cropped-cropped-fundacion-logo-1-1-1536x347.png"
+        alt="fdje"
+        class="ml-[14px] min-w-[12rem]"
+        [ngClass]="{ hidden: !sidebar }"
+      />
+      <img
+        src="/assets/images/favicon.png"
+        alt="fdje"
+        class="ml-[11px] w-12"
+        [ngClass]="{ hidden: sidebar }"
+      />
+    </a>
+  </div>
+
+  <div
+    class="p-4 flex justify-between flex-col text-neutral"
+    style="height: calc(100vh - 4rem)"
+  >
+    <ul>
+      <li
+        [routerLinkActive]="['active']"
+        routerLink="/system/dashboard"
+        class="flex pl-0 rounded-md items-center transition-all hover:bg-[#3f51b521] cursor-pointer"
+      >
+        <div
+          class="flex justify-center items-center min-w-[2.25rem] min-h-[2.25rem] rounded-md"
+        >
+          <span class="fas fa-home text-sm leading-none"></span>
+        </div>
+        <div class="h-9 rounded-md flex items-center">
+          <a class="flex items-center text-sm" [ngClass]="{ hidden: !sidebar }">
+            <span class="text-ellipsis overflow-hidden whitespace-nowrap"
+              >Home</span
+            >
+          </a>
+        </div>
+      </li>
+
+      <div
+        *permissions="[
+          'LEER_USUARIOS',
+          'CREAR_USUARIOS',
+          'ACTUALIZAR_USUARIOS',
+          'ELIMINAR_USUARIOS'
+        ]"
+      >
+        <div class="opacity-50">
+          <div class="mt-5 mb-1.5">
+            <h2
+              class="text-xs font-normal text-ellipsis overflow-hidden whitespace-nowrap"
+              [ngClass]="{ 'opacity-0 pointer-events-none': !sidebar }"
+            >
+              Administración
+            </h2>
+          </div>
+        </div>
+        <li
+          [routerLinkActive]="['active']"
+          routerLink="/system/personal"
+          *permissions="[
+            'LEER_USUARIOS',
+            'CREAR_USUARIOS',
+            'ACTUALIZAR_USUARIOS',
+            'ELIMINAR_USUARIOS',
+            'LEER_ROLES',
+            'CREAR_ROLES',
+            'ACTUALIZAR_ROLES',
+            'ELIMINAR_ROLES'
+          ]"
+          class="flex pl-0 rounded-md items-center transition-all hover:bg-[#3f51b521] cursor-pointer"
+        >
+          <div
+            class="flex justify-center items-center min-w-[2.25rem] min-h-[2.25rem] rounded-md"
+          >
+            <span class="fas fa-user-tie text-base leading-none"></span>
+          </div>
+          <div class="h-9 rounded-md flex items-center">
+            <a
+              class="flex items-center text-sm"
+              [ngClass]="{ hidden: !sidebar }"
+            >
+              <span class="text-ellipsis overflow-hidden whitespace-nowrap"
+                >Operador</span
+              >
+            </a>
+          </div>
+        </li>
+      </div>
+
+      <div
+        *permissions="[
+          'LEER_PACIENTES',
+          'CREAR_PACIENTES',
+          'ACTUALIZAR_PACIENTES',
+          'ELIMINAR_PACIENTES',
+          'LEER_ENTREGA_INSUMOS',
+          'CREAR_ENTREGA_INSUMOS',
+          'ACTUALIZAR_ENTREGA_INSUMOS',
+          'ELIMINAR_ENTREGA_INSUMOS',
+          'LEER_EXAMENES',
+          'CREAR_EXAMENES',
+          'ACTUALIZAR_EXAMENES',
+          'ELIMINAR_EXAMENES',
+          'LEER_EXAMENES_HEMOGLOBINA',
+          'CREAR_EXAMENES_HEMOGLOBINA',
+          'ACTUALIZAR_EXAMENES_HEMOGLOBINA',
+          'ELIMINAR_EXAMENES_HEMOGLOBINA'
+        ]"
+      >
+        <div class="opacity-50">
+          <div class="mt-5 mb-1.5">
+            <h2
+              class="text-xs font-normal text-ellipsis overflow-hidden whitespace-nowrap"
+              [ngClass]="{ 'opacity-0 pointer-events-none': !sidebar }"
+            >
+              Seguimiento
+            </h2>
+          </div>
+        </div>
+
+        <li
+          [routerLinkActive]="['active']"
+          routerLink="/system/pacientes"
+          *permissions="[
+            'LEER_PACIENTES',
+            'CREAR_PACIENTES',
+            'ACTUALIZAR_PACIENTES',
+            'ELIMINAR_PACIENTES'
+          ]"
+          class="flex pl-0 rounded-md items-center transition-all hover:bg-[#3f51b521] cursor-pointer"
+        >
+          <div
+            class="flex justify-center items-center min-w-[2.25rem] min-h-[2.25rem] rounded-md"
+          >
+            <span class="fas fa-user-injured text-base leading-none"></span>
+          </div>
+          <div class="h-9 rounded-md flex items-center">
+            <a
+              class="flex items-center text-sm"
+              [ngClass]="{ hidden: !sidebar }"
+            >
+              <span class="text-ellipsis overflow-hidden whitespace-nowrap"
+                >Pacientes</span
+              >
+            </a>
+          </div>
+        </li>
+
+        <li
+          [routerLinkActive]="['active']"
+          routerLink="/system/control-medico"
+          *permissions="[
+            'LEER_ENTREGAS_INSUMOS',
+            'CREAR_ENTREGAS_INSUMOS',
+            'ACTUALIZAR_ENTREGAS_INSUMOS',
+            'ELIMINAR_ENTREGAS_INSUMOS',
+            'LEER_EXAMENES',
+            'CREAR_EXAMENES',
+            'ACTUALIZAR_EXAMENES',
+            'ELIMINAR_EXAMENES',
+            'LEER_EXAMENES_HEMOGLOBINA',
+            'CREAR_EXAMENES_HEMOGLOBINA',
+            'ACTUALIZAR_EXAMENES_HEMOGLOBINA',
+            'ELIMINAR_EXAMENES_HEMOGLOBINA'
+          ]"
+          class="flex pl-0 rounded-md items-center transition-all hover:bg-[#3f51b521] cursor-pointer"
+        >
+          <div
+            class="flex justify-center items-center min-w-[2.25rem] min-h-[2.25rem] rounded-md"
+          >
+            <span class="fas fa-stethoscope text-base leading-none"></span>
+          </div>
+          <div class="h-9 rounded-md flex items-center">
+            <a
+              class="flex items-center text-sm"
+              [ngClass]="{ hidden: !sidebar }"
+            >
+              <span class="text-ellipsis overflow-hidden whitespace-nowrap"
+                >Control Médico</span
+              >
+            </a>
+          </div>
+        </li>
+      </div>
+
+      <div
+        *permissions="[
+          'LEER_CATALOGOS',
+          'CREAR_CATALOGOS',
+          'ACTUALIZAR_CATALOGOS',
+          'ELIMINAR_CATALOGOS'
+        ]"
+      >
+        <div class="opacity-50">
+          <div class="mt-5 mb-1.5">
+            <h2
+              class="text-xs font-normal text-ellipsis overflow-hidden whitespace-nowrap"
+              [ngClass]="{ 'opacity-0 pointer-events-none': !sidebar }"
+            >
+              Panel de control
+            </h2>
+          </div>
+        </div>
+        <li
+          [routerLinkActive]="['active']"
+          routerLink="/system/control-datos"
+          *permissions="[
+            'LEER_CATALOGOS',
+            'CREAR_CATALOGOS',
+            'ACTUALIZAR_CATALOGOS',
+            'ELIMINAR_CATALOGOS'
+          ]"
+          class="flex pl-0 rounded-md items-center transition-all hover:bg-[#3f51b521] cursor-pointer"
+        >
+          <div
+            class="flex justify-center items-center min-w-[2.25rem] min-h-[2.25rem] rounded-md"
+          >
+            <span class="fas fa-database text-base leading-none"></span>
+          </div>
+          <div class="h-9 rounded-md flex items-center">
+            <a
+              class="flex items-center text-sm"
+              [ngClass]="{ hidden: !sidebar }"
+            >
+              <span class="text-ellipsis overflow-hidden whitespace-nowrap"
+                >Control de datos</span
+              >
+            </a>
+          </div>
+        </li>
+      </div>
+    </ul>
+
+    <ul>
+      <li class="text-xs opacity-50">
+        <span *ngIf="sidebar" class="uppercase mr-1">System FDJE</span>
+        <span>v2.0</span>
+      </li>
+    </ul>
+  </div>
+</div>

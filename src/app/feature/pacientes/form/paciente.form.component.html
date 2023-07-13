@@ -1,0 +1,87 @@
+<module-header title="{{title}}">
+  <paciente-form-breadcrumbs breadcrumbs>
+    <li *ngIf="currentPatient.person"><a>{{currentPatient.person | FullNameFirstMiddle}}</a></li>
+  </paciente-form-breadcrumbs>
+  <paciente-form-tabs tabs [id]="currentPatient.id" (tabEmitter)="receiveTab($event)" [tab]="tab"></paciente-form-tabs>
+</module-header>
+
+<div #form class="w-full p-8 px-20 bg-white border-t-[1px] border-[#535a6650] h-[calc(100vh-4rem-9rem+4px)] overflow-y-auto">
+
+  <form class="w-full" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+    <div [ngClass]="{ block: tab==1, hidden: tab!=1 }">
+      <datos-personales-form [formGroup]="formGroup" [loading]="loading"></datos-personales-form>
+    </div>
+
+    <div [ngClass]="{ block: tab==2, hidden: tab!=2 }">
+      <datos-medicos-form [formGroup]="formGroup" [loading]="loading"></datos-medicos-form>
+    </div>
+
+    <div [ngClass]="{ block: tab==3, hidden: tab!=3 }">
+      <datos-sociales-form [formGroup]="formGroup" [loading]="loading"></datos-sociales-form>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="mb-8 mt-8 w-full flex justify-between items-center">
+      <div class="flex justify-between items-center gap-4">
+        <button [routerLink]="['/system/pacientes']" *ngIf="tab!=1" type="button"
+          class="btn btn-outline btn-primary text-xs text-primary rounded-md  flex justify-center items-center">
+          <div class="flex justify-center items-center gap-2">
+            <span class="fa-solid fa-arrow-left-long text-sm"></span>
+            <span>Cancelar</span>
+          </div>
+        </button>
+        <button *ngIf="currentPatient.id" type="button" (click)="openDialogArchivePaciente(currentPatient)"
+          class="btn btn-outline btn-error text-xs rounded-md">Eliminar</button>
+
+      </div>
+      <div class="flex justify-between items-center gap-4">
+        <button [routerLink]="['/system/pacientes']" *ngIf="tab==1" type="button"
+          class="btn btn-outline btn-primary text-xs text-primary rounded-md  flex justify-center items-center">
+          <div class="flex justify-center items-center gap-2">
+            <span class="fa-solid fa-arrow-left-long text-sm"></span>
+            <span>Cancelar</span>
+          </div>
+        </button>
+
+        <button (click)="previousTab()" type="button" *ngIf="tab!=1"
+          class="btn btn-outline btn-primary text-xs text-primary rounded-md  flex justify-center items-center">
+          <div class="flex justify-center items-center gap-2">
+            <span class="fa-solid fa-arrow-left-long text-sm"></span>
+            <span>Atrás</span>
+          </div>
+        </button>
+
+        <button type="button" class="btn btn-primary text-xs rounded-md border-0 flex justify-center items-center"
+          *ngIf="tab==1" (click)="nextTab()"
+          [disabled]="!formGroup.get('person')?.valid || !formGroup.get('email')?.valid"
+          [ngClass]="{'!text-white !bg-neutral opacity-80': !formGroup.get('person')?.valid || !formGroup.get('email')?.valid}">
+          <div class="flex justify-center items-center gap-2">
+            <span class="fa-solid fa-arrow-right-long text-sm"></span>
+            Siguiente
+          </div>
+        </button>
+
+        <button type="button" class="btn btn-primary text-xs rounded-md border-0 flex justify-center items-center"
+          *ngIf="tab==2" (click)="nextTab()" [disabled]="!formGroup.get('medical_record')?.valid"
+          [ngClass]="{'!text-white !bg-neutral opacity-80': !formGroup.get('medical_record')?.valid}">
+          <div class="flex justify-center items-center gap-2">
+            <span class="fa-solid fa-arrow-right-long text-sm"></span>
+            Siguiente
+          </div>
+        </button>
+
+        <button type="submit" class="btn btn-primary text-xs rounded-md border-0 flex justify-center items-center"
+          *ngIf="tab==3" [disabled]="!formGroup.valid"
+          [ngClass]="{'!text-white !bg-neutral opacity-80': !formGroup.valid}">
+          <div class="flex justify-center items-center gap-2">
+            <span class="fa-solid fa-floppy-disk text-sm"></span>
+            <span *ngIf="formGroup.get('id')?.value">Actualizar</span>
+            <span *ngIf="!formGroup.get('id')?.value">Guardar</span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </form>
+
+</div>

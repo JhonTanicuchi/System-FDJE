@@ -1,0 +1,173 @@
+<div class="grid grid-rows-3 h-[calc(100vh-4rem)]">
+  <div class="bg-primary row-span-1 shadow-md shadow-[#3f51b5a6] z-10 p-6 text-white overflow-hidden relative">
+    <h3 class="text-base opacity-60">Hola <span *ngIf="user">{{ user | FullNameShort }}</span>!</h3>
+
+    <div class="w-full absolute bottom-5 left-0">
+      <div class="w-full flex justify-between items-center p-6">
+        <div>
+          <h2 class="text-xl">Bienvenid@ a la</h2>
+          <h1 class="text-3xl font-bold">
+            Fundación Diabetes Juvenil del Ecuador
+          </h1>
+        </div>
+        <div class="rounded-full h-20 w-20 bg-white flex justify-center items-center overflow-hidden p-2">
+          <img src="/assets/images/logo.jpg" alt="logo" />
+        </div>
+      </div>
+
+      <div class="w-full flex">
+        <span class="h-0.5 w-1/2 bg-[#FFDD00]"></span>
+        <span class="h-0.5 w-1/4 bg-[#034EA2]"></span>
+        <span class="h-0.5 w-1/4 bg-[#ED1C24]"></span>
+      </div>
+    </div>
+  </div>
+  <div class="bg-neutral-content row-span-6 grid grid-cols-12 grid-rows-3 p-6 gap-6">
+
+    <div class="col-span-8 grid grid-flow-col auto-cols-fr gap-4"
+      [ngClass]="{'!col-span-12': authService.isAuthorized(['LEER_USUARIOS']), '!col-span-8': !authService.isAuthorized(['LEER_USUARIOS']),'!col-span-4 !col-start-9': !authService.isAuthorized(['LEER_PACIENTES']),'hidden': !authService.isAuthorized(['LEER_USUARIOS']) && !authService.isAuthorized(['LEER_PACIENTES'])}">
+
+      <div *permissions="['LEER_USUARIOS']"
+        class="rounded-md bg-white text-neutral p-5 shadow-sm	transition-all hover:scale-[1.01] hover:shadow-md">
+        <div class="flex justify-between items-start	">
+          <h2 class="font-medium opacity-80">Usuarios Totales</h2>
+          <div class="p-5 bg-primary flex justify-center items-center rounded-md w-4 h-4">
+            <span class="fas fa-circle-user text-xl leading-none text-white"></span>
+          </div>
+        </div>
+        <div class="flex -mt-3 mb-2">
+          <loader *ngIf="loading" class="h-10"></loader>
+          <h1 *ngIf="!loading" class="font-medium text-4xl">{{statistics.totalUsers}}</h1>
+        </div>
+        <h3 class="opacity-60 text-sm	">Usuarios inactivos:
+          <span *ngIf="!loading">{{statistics.inactiveUsers}}</span>
+          <span *ngIf="loading" class="animate-pulse">...</span>
+        </h3>
+      </div>
+
+      <div *permissions="['LEER_PACIENTES']"
+        class=" rounded-md bg-white text-neutral p-5 shadow-sm transition-all hover:scale-[1.02] hover:shadow-md">
+        <div class="flex justify-between items-start	">
+          <h2 class="font-medium opacity-80">Pacientes Totales</h2>
+          <div class="p-5 bg-primary flex justify-center items-center rounded-md w-4 h-4">
+            <span class="fas fa-user-injured text-xl leading-none text-white"></span>
+          </div>
+        </div>
+        <div class="flex -mt-3 mb-2">
+          <loader *ngIf="loading" class="h-10"></loader>
+          <h1 *ngIf="!loading" class="font-medium text-4xl">{{statistics.totalPatients}}</h1>
+        </div>
+        <h3 class="opacity-60 text-sm	">Pacientes nuevos:
+          <span *ngIf="!loading">{{statistics.newPatients}}</span>
+          <span *ngIf="loading" class="animate-pulse">...</span>
+        </h3>
+      </div>
+
+      <div *permissions="['LEER_PACIENTES']"
+        class=" rounded-md bg-white text-neutral p-5 shadow-sm	transition-all hover:scale-[1.02] hover:shadow-md">
+        <div class="flex justify-between items-start	">
+          <h2 class="font-medium opacity-80">Apadrinados Totales</h2>
+          <div class="p-5 bg-primary flex justify-center items-center rounded-md w-4 h-4">
+            <span class="fas fa-user text-xl leading-none text-white"></span>
+          </div>
+        </div>
+        <div class="flex -mt-3 mb-2">
+          <loader *ngIf="loading" class="h-10"></loader>
+          <h1 *ngIf="!loading" class="font-medium text-4xl">{{statistics.sponsoredPatients}}
+          </h1>
+        </div>
+        <h3 class="opacity-60 text-sm	">...</h3>
+      </div>
+
+      <div *permissions="['LEER_PACIENTES','LEER_ENTREGAS_INSUMOS']"
+        class=" rounded-md bg-white text-neutral p-5 shadow-sm	transition-all hover:scale-[1.02] hover:shadow-md">
+        <div class="flex justify-between items-start	">
+          <h2 class="font-medium opacity-80">Entregas Pendientes</h2>
+          <div class="p-5 bg-primary flex justify-center items-center rounded-md w-4 h-4">
+            <span class="fas fa-syringe text-xl leading-none text-white"></span>
+          </div>
+        </div>
+        <div class="flex -mt-3 mb-2">
+          <loader *ngIf="loading" class="h-10"></loader>
+          <h1 *ngIf="!loading" class="font-medium text-4xl">
+            {{statistics.pendingSupplyDeliveries}}</h1>
+        </div>
+        <h3 class="opacity-60 text-sm	">Entregas realizadas:
+          <span *ngIf="!loading">{{statistics.completedSupplyDeliveries}}</span>
+          <span *ngIf="loading" class="animate-pulse">...</span>
+        </h3>
+      </div>
+    </div>
+
+
+    <div *permissions="['LEER_PACIENTES']"
+      class="w-full h-full flex justify-center items-center flex-col col-span-8 row-span-2 row-start-2 rounded-md bg-white shadow-sm	transition-all p-6">
+      <app-line-chart class="w-full h-full"></app-line-chart>
+    </div>
+
+
+    <div *ngIf="!authService.isAuthorized(['LEER_PACIENTES'])"
+      class="bg-white col-span-8 col-start-1 row-span-3 row-start-1 rounded-md shadow-sm overflow-hidden">
+      <section class="h-full w-full relative">
+        <div class="h-32 w-32 absolute bottom-0 right-0 bg-blue-100 z-10 flex justify-end items-end p-7"
+          style="clip-path: polygon(100% 0, 0% 100%, 100% 100%)">
+          <span class="fa-solid fa-shield-halved text-primary text-xl"></span>
+        </div>
+
+        <div class="h-full w-full text-neutral p-10 px-14 relative flex justify-center items-center">
+          <h2 class="font-medium opacity-80 absolute top-10 left-14">Políticas de privacidad y responsabilidad en System
+            FDJE</h2>
+          <div class="flex flex-col gap-6 text-sm">
+            <div class="inline-flex gap-2">
+              <span
+                class="bg-blue-100 text-primary text-sm font-semibold flex items-center justify-center p-1.5 rounded-full h-6 w-6">1</span>
+              <p>Al utilizar System FDJE, estás de acuerdo en cumplir con las políticas de privacidad y seguridad de la
+                aplicación.</p>
+            </div>
+            <div class="inline-flex gap-2">
+              <span
+                class="bg-blue-100 text-primary text-sm font-semibold flex items-center justify-center p-1.5 rounded-full h-6 w-6">2</span>
+              <p>No compartirás información confidencial de los clientes con terceros sin su consentimiento.</p>
+            </div>
+            <div class="inline-flex gap-2">
+              <span
+                class="bg-blue-100 text-primary text-sm font-semibold flex items-center justify-center p-1.5 rounded-full h-6 w-6">3</span>
+              <p>Te comprometes a no utilizar la información de los clientes para fines personales o comerciales.</p>
+            </div>
+            <div class="inline-flex gap-2">
+              <span
+                class="bg-blue-100 text-primary text-sm font-semibold flex items-center justify-center p-1.5 rounded-full h-6 w-6">4</span>
+              <p>En caso de incumplir estas políticas, estarás sujeto a sanciones legales y disciplinarias.</p>
+            </div>
+            <div class="inline-flex gap-2">
+              <span
+                class="bg-blue-100 text-primary text-sm font-semibold flex items-center justify-center p-1.5 rounded-full h-6 w-6">5</span>
+              <p>Es tu responsabilidad asegurar que toda la información que manejes en System FDJE sea precisa y
+                actualizada.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+
+    <div
+      [ngClass]="{'!row-span-2': authService.isAuthorized(['LEER_USUARIOS']), '!row-span-3 !row-start-1': !authService.isAuthorized(['LEER_USUARIOS'])}"
+      class="col-span-4 row-span-2 rounded-md bg-white bg-[url('/assets/images/FDJE.jpg')] bg-center bg-cover bg-no-repeat overflow-hidden  shadow-sm	transition-all">
+      <div class="h-full bg-[#535a66bb] relative transition-all"
+        [ngClass]="{'!backdrop-blur-sm': loading}">
+        <div class="absolute bottom-0 left-0 p-6 w-full">
+          <div class="border-b border-white mb-2 p-2">
+            <h2 class="text-white text-sm">Nos gusta recordarte que estamos felices de tenerte en nuestra comunidad
+            </h2>
+          </div>
+          <div class="flex items-center px-2">
+            <a href="https://fdje.org"><img src="/assets/images/favicon.png" alt="fdje" class="w-8" /></a>
+            <a class="text-white text-sm font-bold ml-2 hover:opacity-80 leading-4" href="https://fdje.org">
+              <span>Fundación Diabetes Juvenil del Ecuador</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

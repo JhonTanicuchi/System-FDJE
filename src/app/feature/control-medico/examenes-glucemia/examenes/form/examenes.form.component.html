@@ -1,0 +1,510 @@
+<module-header title="{{ title }}">
+  <examen-glucemia-breadcrumbs breadcrumbs>
+     <li>
+      <a routerLink="/system/control-medico/examenes-glucemia/examenes"
+        >Exámenes</a
+      >
+    </li>
+    <li><a class="!event-none !cursor-default !no-underline">Formulario</a></li>
+    <li *ngIf="currentTest.patient">
+      <a class="!event-none !cursor-default !no-underline marker:capitalize">{{
+        (currentTest.patient.person | NamesSurnamesComplete).toLowerCase()
+      }}</a>
+    </li>
+  </examen-glucemia-breadcrumbs>
+  <div tabs class="h-8"></div>
+</module-header>
+
+<div class="w-full p-8 px-20 bg-white border-t-[1px] border-[#535a6650]">
+  <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+    <div class="grid grid-cols-5 gap-8 py-8 relative h-36">
+      <div
+        *ngIf="loading"
+        class="absolute h-full w-full top-0 left-0 bg-[#535a6610] !backdrop-blur-md z-10 rounded-md"
+      >
+        <loader></loader>
+      </div>
+      <div
+        *ngIf="!loading"
+        class="col-span-1 text-neutral flex items-center justify-center"
+      >
+        <div tabindex="0" class="avatar">
+          <div class="w-20 mask mask-squircle">
+            <div
+              class="inline-flex overflow-hidden relative justify-center items-center w-20 h-20 bg-neutral"
+            >
+              <span
+                *ngIf="currentTest.patient"
+                class="font-medium text-white text-2xl uppercase"
+                >{{ currentTest.patient.person | NameInitials }}</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="!loading"
+        class="col-span-4 rounded-md w-full font-medium text-lg text-neutral"
+      >
+        <div class="w-full flex justify-between items-start">
+          <div>
+            <h1 *ngIf="currentTest.patient" class="font-bold">
+              {{ currentTest.patient.person | NamesSurnamesComplete }}
+            </h1>
+            <h1 *ngIf="currentTest.patient" class="text-sm opacity-80">
+              {{ currentTest.patient.person.identification }}
+            </h1>
+            <h1 *ngIf="currentTest.patient" class="text-sm opacity-80">
+              {{ currentTest.patient.person.date_birth | Age }} Años
+            </h1>
+          </div>
+          <div class="flex flex-col items-end">
+            <span
+              class="bg-neutral-content text-neutral text-xs font-medium inline-flex items-center gap-2 px-2.5 py-0.5 rounded"
+            >
+              <span class="fa-solid fa-clock"></span>
+              <span *ngIf="test_last">
+                Ultimo examen {{ test_last.created_at | TimeAgo }}
+              </span>
+              <span *ngIf="!test_last"> Sin exámenes </span>
+            </span>
+
+            <span
+              *ngIf="currentTest.patient"
+              class="bg-primary text-white text-xs text-center uppercase font-medium block px-2.5 py-2 mt-2 rounded"
+            >
+              Diabetes
+              {{ currentTest.patient.medical_record.diabetes_type.value }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="grid grid-cols-5 gap-8 my-8">
+      <div class="col-span-1 text-neutral">
+        <h3 class="font-medium">Información</h3>
+        <p class="text-sm">Indicaciones generales para este formulario.</p>
+      </div>
+
+      <div
+        class="col-span-4 rounded-md bg-neutral-content w-full p-4 px-20 font-medium text-sm text-neutral"
+      >
+        <p>
+          1. Todos los campos son de carácter obligatorio si cuenta con (<span
+            class="text-red-500"
+            >*</span
+          >)
+        </p>
+        <p>
+          2. Si el campo se encuentra en rojo la información ingresada es
+          incorrecta.
+        </p>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="grid grid-cols-5 gap-8 my-8">
+      <div class="col-span-1 text-neutral">
+        <h3 class="font-medium">Datos de los exámenes</h3>
+        <p class="text-sm">Indicaciones generales para este formulario.</p>
+      </div>
+
+      <div
+        class="col-span-4 py-12 px-20 border border-[#535a6650] relative bg-[#ebecf090] rounded-md"
+      >
+        <div
+          *ngIf="loading"
+          class="absolute h-full w-full top-0 left-0 bg-[#535a6610] !backdrop-blur-md z-10"
+        >
+          <loader></loader>
+        </div>
+
+        <div class="grid grid-cols-4 gap-4">
+          <span
+            class="col-span-4 bg-neutral-content text-neutral text-xs font-medium inline-flex items-center gap-2 px-2.5 py-2 rounded"
+          >
+            <span class="fa-solid fa-clipboard-check"></span>
+            <span> Exámenes Completos: {{ exams_completed }} </span>
+
+            <span
+              class="fa-solid fa-clipboard-question"
+              [ngClass]="{ 'text-red-600': exams_missing }"
+            ></span>
+            <span [ngClass]="{ 'text-red-600': exams_missing }">
+              Exámenes Pendientes: {{ exams_missing }}
+            </span>
+          </span>
+
+          <div
+            class="w-full h-[59.5px] col-span-2 text-xs text-neutral flex flex-col bg-[#eaeaed] pt-[12px] px-[12px] rounded-tl-[4px] rounded-tr-[4px]"
+          >
+            <label>¿Control de oftalmólogo? *</label>
+            <mat-radio-group
+              class="flex gap-2 my-[6px] text-sm"
+              color="primary"
+              formControlName="ophthalmologist"
+            >
+              <mat-radio-button value="si">Si</mat-radio-button>
+              <mat-radio-button value="no">No</mat-radio-button>
+              <mat-radio-button value="no aplica">No aplica</mat-radio-button>
+            </mat-radio-group>
+            <mat-hint>Agudeza visual y fondo de ojo</mat-hint>
+          </div>
+
+          <mat-form-field appearance="fill" class="w-full col-span-2">
+            <mat-label>Fecha de control de oftalmólogo</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker3"
+              formControlName="ophthalmologist_date"
+              [errorStateMatcher]="matcher"
+              autocomplete="off"
+              spellcheck="false"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker3"
+            ></mat-datepicker-toggle>
+            <mat-datepicker
+              #picker3
+              [disabled]="formGroup.get('ophthalmologist')?.value != 'si'"
+            ></mat-datepicker>
+            <mat-error
+              *ngIf="
+                formGroup
+                  .get('ophthalmologist_date')
+                  ?.hasError('maxDateToday') &&
+                !formGroup.get('ophthalmologist_date')?.hasError('required')
+              "
+            >
+              Ingresa una fecha <strong>valida</strong>
+            </mat-error>
+            <mat-error
+              *ngIf="
+                formGroup.get('ophthalmologist_date')?.hasError('required')
+              "
+            >
+              Selecciona una <strong>fecha</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <div
+            class="w-full h-[59.5px] col-span-2 text-xs text-neutral flex flex-col bg-[#eaeaed] pt-[12px] px-[12px] rounded-tl-[4px] rounded-tr-[4px]"
+          >
+            <label>¿Control de nefrólogo? *</label>
+            <mat-radio-group
+              class="flex gap-2 my-[6px] text-sm"
+              color="primary"
+              formControlName="nephrologist"
+            >
+              <mat-radio-button value="si">Si</mat-radio-button>
+              <mat-radio-button value="no">No</mat-radio-button>
+            </mat-radio-group>
+            <mat-hint>Examen albúmina creatina</mat-hint>
+          </div>
+
+          <mat-form-field appearance="fill" class="w-full col-span-2">
+            <mat-label>Fecha del control de nefrólogo</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker4"
+              formControlName="nephrologist_date"
+              [errorStateMatcher]="matcher"
+              autocomplete="off"
+              spellcheck="false"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker4"
+            ></mat-datepicker-toggle>
+            <mat-datepicker
+              #picker4
+              [disabled]="formGroup.get('nephrologist')?.value != 'si'"
+            ></mat-datepicker>
+            <mat-error
+              *ngIf="
+                formGroup.get('nephrologist_date')?.hasError('maxDateToday') &&
+                !formGroup.get('nephrologist_date')?.hasError('required')
+              "
+            >
+              Ingresa una fecha <strong>valida</strong>
+            </mat-error>
+            <mat-error
+              *ngIf="formGroup.get('nephrologist_date')?.hasError('required')"
+            >
+              Selecciona una <strong>fecha</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <div
+            class="w-full h-[59.5px] col-span-2 text-xs text-neutral flex flex-col bg-[#eaeaed] pt-[12px] px-[12px] rounded-tl-[4px] rounded-tr-[4px]"
+          >
+            <label>¿Control de podólogo? *</label>
+            <mat-radio-group
+              class="flex gap-2 my-[6px] text-sm"
+              color="primary"
+              formControlName="podiatrist"
+            >
+              <mat-radio-button value="si">Si</mat-radio-button>
+              <mat-radio-button value="no">No</mat-radio-button>
+              <mat-radio-button value="no aplica">No aplica</mat-radio-button>
+            </mat-radio-group>
+            <mat-hint>Chequeo general de los pies</mat-hint>
+          </div>
+
+          <mat-form-field appearance="fill" class="w-full col-span-2">
+            <mat-label>Fecha del control de podólogo</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker5"
+              formControlName="podiatrist_date"
+              [errorStateMatcher]="matcher"
+              autocomplete="off"
+              spellcheck="false"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker5"
+            ></mat-datepicker-toggle>
+            <mat-datepicker
+              #picker5
+              [disabled]="formGroup.get('podiatrist')?.value != 'si'"
+            ></mat-datepicker>
+            <mat-error
+              *ngIf="
+                formGroup.get('podiatrist_date')?.hasError('maxDateToday') &&
+                !formGroup.get('podiatrist_date')?.hasError('required')
+              "
+            >
+              Ingresa una fecha <strong>valida</strong>
+            </mat-error>
+            <mat-error
+              *ngIf="formGroup.get('podiatrist_date')?.hasError('required')"
+            >
+              Selecciona una <strong>fecha</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <div
+            class="w-full h-[59.5px] col-span-2 text-xs text-neutral flex flex-col bg-[#eaeaed] pt-[12px] px-[12px] rounded-tl-[4px] rounded-tr-[4px]"
+          >
+            <label>Perfil lipídico? *</label>
+            <mat-radio-group
+              class="flex gap-2 my-[6px] text-sm"
+              color="primary"
+              formControlName="lipidic"
+            >
+              <mat-radio-button value="si">Si</mat-radio-button>
+              <mat-radio-button value="no">No</mat-radio-button>
+            </mat-radio-group>
+            <mat-hint>Colesterol, HDL, LDL, trigliceridos</mat-hint>
+          </div>
+
+          <mat-form-field appearance="fill" class="w-full col-span-2">
+            <mat-label>Fecha del perfil lipídico</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker6"
+              formControlName="lipidic_date"
+              [errorStateMatcher]="matcher"
+              autocomplete="off"
+              spellcheck="false"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker6"
+            ></mat-datepicker-toggle>
+            <mat-datepicker
+              #picker6
+              [disabled]="formGroup.get('lipidic')?.value != 'si'"
+            ></mat-datepicker>
+            <mat-error
+              *ngIf="
+                formGroup.get('lipidic_date')?.hasError('maxDateToday') &&
+                !formGroup.get('lipidic_date')?.hasError('required')
+              "
+            >
+              Ingresa una fecha <strong>valida</strong>
+            </mat-error>
+            <mat-error
+              *ngIf="formGroup.get('lipidic_date')?.hasError('required')"
+            >
+              Selecciona una <strong>fecha</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <div
+            class="w-full h-[59.5px] col-span-2 text-xs text-neutral flex flex-col bg-[#eaeaed] pt-[12px] px-[12px] rounded-tl-[4px] rounded-tr-[4px]"
+          >
+            <label>¿Examen de Tiroides? *</label>
+            <mat-radio-group
+              class="flex gap-2 my-[6px] text-sm"
+              color="primary"
+              formControlName="thyroid"
+            >
+              <mat-radio-button value="si">Si</mat-radio-button>
+              <mat-radio-button value="no">No</mat-radio-button>
+            </mat-radio-group>
+            <mat-hint>T3, T4, TSH</mat-hint>
+          </div>
+
+          <mat-form-field appearance="fill" class="w-full col-span-2">
+            <mat-label>Fecha del examen de Tiroides</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker7"
+              formControlName="thyroid_date"
+              [errorStateMatcher]="matcher"
+              autocomplete="on"
+              spellcheck="false"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker7"
+            ></mat-datepicker-toggle>
+            <mat-datepicker
+              #picker7
+              [disabled]="formGroup.get('thyroid')?.value != 'si'"
+            ></mat-datepicker>
+            <mat-error
+              *ngIf="
+                formGroup.get('thyroid_date')?.hasError('maxDateToday') &&
+                !formGroup.get('thyroid_date')?.hasError('required')
+              "
+            >
+              Ingresa una fecha <strong>valida</strong>
+            </mat-error>
+            <mat-error
+              *ngIf="formGroup.get('thyroid_date')?.hasError('required')"
+            >
+              Selecciona una <strong>fecha</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="grid grid-cols-5 gap-8 my-8">
+      <div class="col-span-1 text-neutral">
+        <h3 class="font-medium">Observaciones</h3>
+        <p class="text-sm">
+          Si existe alguna observación o comentario de refuerzo registrarlo.
+        </p>
+      </div>
+      <div
+        class="col-span-4 py-8 px-20 border border-[#535a6650] relative bg-[#ebecf090] rounded-md"
+      >
+        <div
+          *ngIf="loading"
+          class="absolute h-full w-full top-0 left-0 bg-[#535a6610] !backdrop-blur-md z-10"
+        >
+          <loader></loader>
+        </div>
+
+        <div class="grid grid-cols-4 gap-4">
+          <combobox-estadosExamen
+            formControlName="state"
+            class="w-full col-span-1"
+          ></combobox-estadosExamen>
+
+          <mat-form-field appearance="fill" class="w-full col-span-3">
+            <mat-label>Observaciones</mat-label>
+            <input
+              type="text"
+              matInput
+              formControlName="observations"
+              [errorStateMatcher]="matcher"
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="mb-8 mt-8 w-full flex justify-between items-center">
+      <div class="flex justify-between items-center gap-4">
+        <div *permissions="['ARCHIVAR_EXAMENES']">
+          <button
+            *ngIf="currentTest.id && !currentTest.archived"
+            type="button"
+            (click)="openDialogArchiveTest(currentTest)"
+            class="btn btn-outline btn-error text-xs rounded-md"
+          >
+            Eliminar
+          </button>
+        </div>
+
+        <button
+          *ngIf="currentTest.id && currentTest.archived"
+          [routerLink]="[
+            '/system/control-medico/examenes-glucemia/examenes/follow'
+          ]"
+          type="button"
+          class="btn btn-outline btn-primary text-xs text-primary rounded-md flex justify-center items-center"
+        >
+          <div class="flex justify-center items-center gap-2">
+            <span class="fa-solid fa-arrow-left-long text-sm"></span>
+            <span>Cancelar</span>
+          </div>
+        </button>
+      </div>
+      <div class="flex justify-between items-center gap-4">
+        <button
+          *ngIf="currentTest.id && currentTest.archived"
+          type="button"
+          class="btn btn-outline btn-error text-xs rounded-md"
+        >
+          Archivado
+        </button>
+
+        <button
+          *ngIf="!currentTest.archived"
+          [routerLink]="[
+            '/system/control-medico/examenes-glucemia/examenes/follow'
+          ]"
+          type="button"
+          class="btn btn-outline btn-primary text-xs text-primary rounded-md flex justify-center items-center"
+        >
+          <div class="flex justify-center items-center gap-2">
+            <span class="fa-solid fa-arrow-left-long text-sm"></span>
+            <span>Cancelar</span>
+          </div>
+        </button>
+
+        <div *permissions="['CREAR_EXAMENES', 'ACTUALIZAR_EXAMENES']">
+          <button
+            *ngIf="!currentTest.archived"
+            type="submit"
+            class="btn btn-primary text-xs rounded-md border-0 flex justify-center items-center"
+            [disabled]="!formGroup.valid || !exams_completed"
+            [ngClass]="{
+              '!text-white !bg-neutral opacity-80':
+                !formGroup.valid || !exams_completed
+            }"
+          >
+            <div class="flex justify-center items-center gap-2">
+              <span class="fa-solid fa-floppy-disk text-sm"></span>
+              <span *ngIf="formGroup.get('id')?.value">Actualizar</span>
+              <span *ngIf="!formGroup.get('id')?.value">Guardar</span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

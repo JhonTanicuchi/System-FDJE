@@ -1,0 +1,16 @@
+<h2 class="text-neutral font-medium leading-none opacity-80">Histórico Pacientes</h2>
+<div class="flex items-center gap-1 my-2">
+  <div class="h-[25.6px]" *ngIf="years.length === 0"></div>
+  <button *ngFor="let item of years" (click)="getLineChartData(item.year)"
+    [ngClass]="{'border-primary !bg-primary text-white pointer-events-none': item.year === currentYear}"
+    class="btn text-neutral border-neutral bg-white hover:text-white hover:bg-neutral hover:border-neutral h-auto min-h-0 gap-2 rounded-md text-xs !p-1">
+    {{item.year}}
+  </button>
+</div>
+
+<div class="w-full h-[calc(100%-59px)] flex justify-center items-center">
+  <loader *ngIf="loading"></loader>
+  <canvas class="!w-full" *ngIf="!loading" baseChart [datasets]="lineChartData"
+    [labels]="lineChartLabels" [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend"
+    [chartType]="lineChartType"></canvas>
+</div>

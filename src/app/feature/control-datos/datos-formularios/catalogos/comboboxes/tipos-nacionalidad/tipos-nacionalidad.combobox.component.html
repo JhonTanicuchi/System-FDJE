@@ -1,0 +1,9 @@
+<mat-form-field appearance="fill" class="w-full">
+  <mat-label>Nacionalidad</mat-label>
+  <mat-select [formControl]="nationalityTypeFormControl">
+    <mat-option *ngFor="let nationality of nationalities" [value]="nationality.id">{{nationality.value}}</mat-option>
+  </mat-select>
+  <mat-error *ngIf="nationalityTypeFormControl.hasError('required')">Este campo es
+    <strong>requerido</strong></mat-error>
+  <mat-hint *ngIf="nationalities == null || nationalities.length == 0">No hay nacionalidades</mat-hint>
+</mat-form-field>

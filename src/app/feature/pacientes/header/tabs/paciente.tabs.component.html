@@ -1,0 +1,37 @@
+<div class="tabs flex w-full justify-between items-end flex-row-reverse">
+  <a
+    [routerLinkActive]="['tab-active']"
+    routerLink="/system/pacientes/list/archived"
+    class="tab tab-lifted !-mr-0 archived"
+    *permissions="['RESTAURAR_PACIENTES', 'ELIMINAR_PACIENTES']"
+  >
+    <span class="fa-regular fa-trash-can text-sm leading-none mr-2"></span>
+    Archivados
+  </a>
+  <div></div>
+
+  <div class="flex items-end">
+    <a
+      [routerLinkActive]="['tab-active']"
+      routerLink="/system/pacientes/list"
+      class="tab tab-lifted"
+      *permissions="['LEER_PACIENTES']"
+    >
+      Ficha
+    </a>
+    <a
+      [routerLinkActive]="['tab-active']"
+      routerLink="/system/pacientes/news/list"
+      class="tab tab-lifted relative"
+      *permissions="['LEER_PACIENTES']"
+    >
+      Nuevos
+      <div
+        *ngIf="newsPatients > 0"
+        class="absolute inline-flex items-center justify-center w-5 h-5 text-xs font-medium text-white bg-primary border-2 border-neutral-content rounded-full -top-2 -right-2 shadow"
+      >
+        {{ newsPatients }}
+      </div>
+    </a>
+  </div>
+</div>

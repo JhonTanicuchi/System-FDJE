@@ -1,0 +1,16 @@
+<div class="flex">
+  <div class="w-72 fixed ">
+    <df-sidebar></df-sidebar>
+  </div>
+  <div class="w-full h-[calc(100vh-4rem)] overflow-y-auto ml-72">
+    <div class="w-full px-4">
+      <control-datos-breadcrumbs breadcrumbs>
+        <li><a routerLink="/system/control-datos">Control de datos</a></li>
+        <li><a routerLink="/system/control-datos/datos-formularios">Datos de formularios</a></li>
+      </control-datos-breadcrumbs>
+    </div>
+    <div class="p-4">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

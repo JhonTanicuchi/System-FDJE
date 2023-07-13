@@ -1,0 +1,28 @@
+<control-datos-header>
+  <control-datos-breadcrumbs breadcrumbs>
+    <li><a routerLink="/system/control-datos">Control de datos</a></li>
+  </control-datos-breadcrumbs>
+  <div tabs class="h-8"></div>
+</control-datos-header>
+
+<div
+  class="grid grid-cols-5 p-8 gap-8 w-full bg-white border-t-[1px] border-[#535a6650]"
+>
+  <div
+    *permissions="[
+      'CREAR_CATALOGOS',
+      'LEER_CATALOGOS',
+      'ACTUALIZAR_CATALOGOS',
+      'ELIMINAR_CATALOGOS'
+    ]"
+    class="text-neutral cursor-pointer transition-all hover:scale-[1.02] border-2 border-[#535a6630] rounded-md overflow-hidden"
+    routerLink="datos-formularios"
+  >
+    <div class="h-36 bg-[#eff0f5] flex justify-center items-center rounded-md">
+      <span class="fas fa-database text-6xl text-[#646e97]"></span>
+    </div>
+    <div class="text-center font-regular py-1">
+      <h3>Datos de Formularios</h3>
+    </div>
+  </div>
+</div>

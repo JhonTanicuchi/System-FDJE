@@ -1,0 +1,208 @@
+<module-header title="Historial de Hemoglobina">
+  <examen-glucemia-breadcrumbs breadcrumbs>
+    <li>
+      <a
+        routerLink="/system/control-medico/examenes-glucemia/examenes_hemoglobina"
+        >Exámenes Hemoglobina</a
+      >
+    </li>
+    <li>
+      <a
+        routerLink="/system/control-medico/examenes-glucemia/examenes_hemoglobina/list"
+        >Historial</a
+      >
+    </li>
+  </examen-glucemia-breadcrumbs>
+  <examen-glucemia-tabs
+    tabs
+    route="examenes_hemoglobina"
+  ></examen-glucemia-tabs>
+</module-header>
+
+<div
+  class="w-full h-[calc(100vh-4rem-9rem+4px)] p-4 bg-white border-t-[1px] border-[#535a6650]"
+>
+  <div class="flex justify-between my-4">
+    <div class="w-1/2">
+      <div class="relative">
+        <div
+          class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none"
+        >
+          <span class="fa-solid fa-magnifying-glass"></span>
+        </div>
+        <input
+          type="text"
+          id="table-search"
+          #search
+          (keyup)="searchHemoglobinTestsByTerm(search.value)"
+          class="input input-sm block h-8 p-2 pl-10 w-full max-w-xs text-sm text-neutral bg-[#ebecf0] !border-[#535A6640] rounded-md border !outline-[#535A6620]"
+          placeholder="Buscar"
+        />
+      </div>
+    </div>
+    <div class="flex">
+      <button
+        *permissions="['EXPORTAR_EXAMENES_HEMOGLOBINA']"
+        class="btn btn-sm gap-2 rounded-md bg-neutral-content text-xs text-neutral border-1 border-[#535A6640] shadow ml-4 hover:text-white"
+      >
+        <span class="fa-solid fa-file-export text-sm leading-none"></span>
+        Exportar
+      </button>
+      <button
+        *permissions="['IMPORTAR_EXAMENES_HEMOGLOBINA']"
+        class="btn btn-sm gap-2 rounded-md bg-neutral-content text-xs text-neutral border-1 border-[#535A6640] shadow ml-4 hover:text-white"
+      >
+        <span class="fa-solid fa-file-import text-sm leading-none"></span>
+        Importar
+      </button>
+    </div>
+  </div>
+
+  <div>
+    <div class="px-4 py-1 text-xs">
+      <h3 class="font-medium">
+        <span class="font-bold">{{ hemoglobin_tests.length }}</span> Exámenes de
+        Hemoglobina
+      </h3>
+    </div>
+    <div class="overflow-hidden relative rounded-md">
+      <div class="min-h-[calc(100vh-4rem-20rem)] overflow-hidden bg-neutral-content border border-[#535a6650] rounded-md relative mb-4">
+        <table class="my_table w-full text-sm text-left text-neutral">
+          <thead class="text-xs text-white uppercase bg-primary">
+            <tr>
+              <th scope="col" class="py-3 px-6">#</th>
+              <th scope="col" class="py-3 px-6">
+                <div class="flex items-center">
+                  Nombres y Apellidos
+                  <a
+                    class="cursor-pointer ml-1"
+                    *ngIf="reverse && hemoglobin_tests.length > 1"
+                    (click)="reversOrder()"
+                  >
+                    <span class="fa-solid fa-caret-up"></span>
+                  </a>
+                  <a
+                    class="cursor-pointer ml-1"
+                    *ngIf="!reverse && hemoglobin_tests.length > 1"
+                    (click)="reversOrder()"
+                  >
+                    <span class="fa-solid fa-caret-down"></span>
+                  </a>
+                </div>
+              </th>
+              <th scope="col" class="py-3 px-6">Identificación</th>
+              <th scope="col" class="py-3 px-6">Resultado del examen</th>
+              <th scope="col" class="py-3 px-6">Fecha de entrega</th>
+              <th scope="col" class="py-3 px-6">Estado</th>
+              <th
+                scope="col"
+                class="py-3 px-6"
+                *permissions="[
+                  'ACTUALIZAR_EXAMENES_HEMOGLOBINA',
+                  'ARCHIVAR_EXAMENES_HEMOGLOBINA'
+                ]"
+              >
+                <span class="sr-only">Acciones</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y-[0.5px] divide-[#535A6640]">
+            <tr
+              class="bg-white hover:bg-[#4052b510] transition-all"
+              *ngFor="
+                let hemoglobin_test of hemoglobin_tests | paginate : config;
+                let index = index
+              "
+            >
+              <th
+                scope="row"
+                class="py-3 px-6 font-medium text-neutral whitespace-nowrap dark:text-neutral"
+              >
+                <!-- Indice en orden ascendente -->
+                <span *ngIf="!reverse">{{
+                  config.itemsPerPage * (config.currentPage - 1) + index + 1
+                }}</span>
+                <!-- indice en orden descentente -->
+                <span *ngIf="reverse">{{
+                  hemoglobin_tests.length -
+                    (config.itemsPerPage * (config.currentPage - 1) + index)
+                }}</span>
+              </th>
+              <td
+                class="py-3 px-6 font-medium text-neutral whitespace-nowrap dark:text-neutral capitalize"
+              >
+                <span>{{
+                  hemoglobin_test.patient.person | NamesSurnamesComplete
+                }}</span>
+              </td>
+              <td class="py-3 px-6">
+                <span>{{ hemoglobin_test.patient.person.identification }}</span>
+              </td>
+
+              <td class="py-3 px-6 capitalize">
+                HB1AC: {{ hemoglobin_test.hb1ac_result }}%
+              </td>
+              <td class="py-3 px-6">
+                {{ hemoglobin_test.created_at | date : "dd-MM-yyyy HH:mm:ss" }}
+              </td>
+
+              <th class="py-3 px-6">
+                <div
+                  *ngIf="hemoglobin_test.delivered"
+                  class="flex items-center"
+                >
+                  <span
+                    class="fa-solid fa-circle-check text-[#00BC8C] h-2.5 w-2.5 mr-2"
+                  ></span
+                  >Entregado
+                </div>
+              </th>
+              <th
+                class="py-3 px-6 text-right"
+                *permissions="[
+                  'ACTUALIZAR_EXAMENES_HEMOGLOBINA',
+                  'ARCHIVAR_EXAMENES_HEMOGLOBINA'
+                ]"
+              >
+                <div *ngIf="hemoglobin_test.delivered">
+                  <span
+                    *permissions="['ACTUALIZAR_EXAMENES_HEMOGLOBINA']"
+                    [routerLink]="[
+                      '/system/control-medico/examenes-glucemia/examenes_hemoglobina/form/paciente/',
+                      hemoglobin_test.patient.id,
+                      'examen',
+                      hemoglobin_test.id
+                    ]"
+                    class="fa-regular fa-pen-to-square text-lg ml-3 cursor-pointer transition-all hover:text-primary"
+                  ></span>
+                  <span
+                    *permissions="['ARCHIVAR_EXAMENES_HEMOGLOBINA']"
+                    (click)="openDialogArchiveHemoglobinTest(hemoglobin_test)"
+                    class="fa-regular fa-trash-can text-lg ml-3 cursor-pointer transition-all hover:text-red-600"
+                  >
+                  </span>
+                </div>
+              </th>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          *ngIf="loading || hemoglobin_tests.length == 0"
+          class="h-[calc(100%)] w-full absolute z-10 top-0 left-0"
+        >
+          <div
+            *ngIf="loading"
+            class="h-full w-full bg-[#535a6610] backdrop-blur-sm"
+          >
+            <loader></loader>
+          </div>
+          <no-content
+            *ngIf="hemoglobin_tests.length == 0 && !loading"
+          ></no-content>
+        </div>
+      </div>
+      <!-- Navegacion de tabla -->
+      <pagination [config]="config"></pagination>
+    </div>
+  </div>
+</div>

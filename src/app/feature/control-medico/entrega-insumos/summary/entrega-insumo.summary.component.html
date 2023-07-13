@@ -1,0 +1,144 @@
+<module-header title="Resumen Insumos">
+  <entrega-insumo-breadcrumbs breadcrumbs>
+    <li><a class="pointer-events-none">Resumen</a></li>
+  </entrega-insumo-breadcrumbs>
+</module-header>
+
+<div class="w-full h-[calc(100vh-4rem-7rem+12px)] grid grid-rows-5">
+  <div
+    class="row-span-2 flex justify-center items-center bg-neutral-content shadow-inner relative"
+  >
+    <div
+      class="w-full absolute top-0 p-4 px-8 flex justify-between items-center"
+    >
+      <input
+        class="input h-8 rounded-md bg-white uppercase text-xs text-neutral border-1 border-[#535A6640] shadow"
+        type="month"
+        name="month"
+        id="month"
+        [(ngModel)]="currentMonthYear"
+        (change)="getStatisticsSuppliesDeliveredByMonth()"
+      />
+      <button
+        class="btn btn-sm gap-2 rounded-md bg-primary text-xs border-0 shadow shadow-[#3f51b5] px-8 hover:bg-primary-focus hover:scale-105"
+        routerLink="/system/control-medico/entrega-insumos/follow"
+      >
+        <span class="fas fa-list leading-none"></span>
+        Entregas
+      </button>
+    </div>
+
+    <div class="flex justify-center items-center text-neutral">
+      <span class="fa-solid fa-syringe text-4xl"></span>
+      <loader *ngIf="loading"></loader>
+      <h1 *ngIf="!loading" class="text-6xl font-bold text-center">
+        {{
+          currentStatistics.total_supplies_delivered !== null
+            ? currentStatistics.total_supplies_delivered
+            : 0
+        }}<span class="text-base text-primary">Insumos</span>
+      </h1>
+    </div>
+  </div>
+
+  <div
+    *ngIf="loading || !currentStatistics.total_supplies_delivered"
+    class="row-span-3"
+  >
+    <loader *ngIf="loading"></loader>
+    <no-content
+      *ngIf="!currentStatistics.total_supplies_delivered && !loading"
+    ></no-content>
+  </div>
+
+  <div *ngIf="currentStatistics.total_supplies_delivered">
+    <div
+      class="row-span-3 grid grid-cols-5 gap-4 border-t-[1px] border-[#535a6650] p-8"
+    >
+      <div
+        class="flex items-center border-[1px] border-[#535a6650] rounded-md"
+        *ngFor="
+          let supply of currentStatistics.total_supplies_delivered_by_supply
+        "
+      >
+        <div class="flex justify-center items-center text-neutral p-4 gap-4">
+          <div class="p-2 bg-[#3f51b530] rounded-md">
+            <span class="las la-syringe text-4xl text-primary"></span>
+          </div>
+          <div>
+            <h1 class="font-bold text-sm">
+              Total: {{ supply.total_supplies }}
+            </h1>
+            <h1 class="truncate text-ellipsis overflow-hidden w-36">
+              {{ supply.value }}
+            </h1>
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngFor="
+          let item of calcRemaining(
+            currentStatistics.total_supplies_delivered_by_supply.length,
+            5
+          )
+        "
+        class="flex bg-neutral-content rounded-md border-[1px] border-[#535a6650] opacity-40"
+      ></div>
+    </div>
+
+    <div class="px-8">
+      <h1 class="text-lg text-neutral">Destinos / Insumos</h1>
+    </div>
+
+    <div class="grid grid-cols-3 gap-4 p-8 pt-4">
+      <div
+        class="flex justify-between items-center border-[1px] border-[#535a6650] rounded-md"
+        *ngFor="
+          let supply of currentStatistics.total_supplies_delivered_by_region
+        "
+      >
+        <div class="w-full flex justify-center flex-col items-center p-4">
+          <span class="las la-map-marked-alt text-5xl text-primary"></span>
+          <h1 class="text-sm text-center text-neutral mb-1 ellipsis-lines">
+            {{ supply.region }}
+          </h1>
+          <h3 class="text-neutral font-bold text-sm">
+            Total: {{ supply.total }}
+          </h3>
+        </div>
+        <div class="w-full h-full p-4 border-l-[1px] border-[#535a6650]">
+          <div
+            *ngFor="let detail of supply.supplies"
+            class="flex justify-between items-center border-[1px] border-[#3f51b530] rounded-md mb-1 bg-[#535a6610] text-neutral gap-4"
+          >
+            <div
+              class="w-8 h-8 flex justify-center items-center bg-[#3f51b530] rounded-md"
+            >
+              <span
+                class="las la-syringe text-2xl text-primary flex justify-center items-center"
+              ></span>
+            </div>
+
+            <div class="flex justify-between items-center px-2 gap-2">
+              <h1 class="truncate text-ellipsis overflow-hidden w-40">
+                {{ detail.value }}
+              </h1>
+              <h1 class="font-bold text-sm">x{{ detail.total_supplies }}</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngFor="
+          let item of calcRemaining(
+            currentStatistics.total_supplies_delivered_by_region.length,
+            3
+          )
+        "
+        class="flex bg-neutral-content rounded-md border-[1px] border-[#535a6650] opacity-40"
+      ></div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+<mat-form-field appearance="fill" class="w-full">
+  <mat-label>¿El Jefe de hogar actualmente es?</mat-label>
+  <mat-select [formControl]="householdHeadFormControl">
+    <mat-option *ngFor="let tipoJefeHogar of tiposJefeHogar"
+      [value]="tipoJefeHogar.value">{{tipoJefeHogar.value}}</mat-option>
+  </mat-select>
+  <mat-error *ngIf="householdHeadFormControl.hasError('required')">Este campo es <strong>requerido</strong></mat-error>
+  <mat-hint *ngIf="tiposJefeHogar == null || tiposJefeHogar.length == 0">No hay valores de selección</mat-hint>
+</mat-form-field>

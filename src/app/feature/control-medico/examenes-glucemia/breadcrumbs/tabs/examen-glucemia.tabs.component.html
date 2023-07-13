@@ -1,0 +1,52 @@
+<div class="tabs flex w-full justify-between items-end flex-row-reverse">
+  <a
+    [routerLinkActive]="['tab-active']"
+    routerLink="/system/control-medico/examenes-glucemia/{{
+      route
+    }}/list/archived"
+    class="tab tab-lifted !-mr-0 archived"
+    *permissions="[
+      'RESTAURAR_' + route.toUpperCase(),
+      'ELIMINAR_' + route.toUpperCase()
+    ]"
+  >
+    <span class="fa-regular fa-trash-can text-sm leading-none mr-2"></span>
+    Archivados
+  </a>
+  <div></div>
+
+  <div class="flex items-end">
+    <div class="mr-2 flex items-end"  *permissions="['LEER_EXAMENES_HEMOGLOBINA']">
+      <a
+        [routerLinkActive]="['tab-active']"
+        routerLink="/system/control-medico/examenes-glucemia/examenes_hemoglobina/follow"
+        class="tab tab-lifted !mx-0"
+        >Seguimiento de Hemoglobina / {{ currentYear }}
+      </a>
+      <a
+        [routerLinkActive]="['tab-active']"
+        routerLink="/system/control-medico/examenes-glucemia/examenes_hemoglobina/list"
+        class="tab tab-lifted"
+      >
+        Registros
+      </a>
+    </div>
+    <div class="mr-2 flex items-end" *permissions="['LEER_EXAMENES']">
+      <a
+        [routerLinkActive]="['tab-active']"
+        routerLink="/system/control-medico/examenes-glucemia/examenes/follow"
+        class="tab tab-lifted !mx-0"
+      >
+        Seguimiento de Exámenes / {{ currentYear }}
+      </a>
+
+      <a
+        [routerLinkActive]="['tab-active']"
+        routerLink="/system/control-medico/examenes-glucemia/examenes/list"
+        class="tab tab-lifted"
+      >
+        Registros
+      </a>
+    </div>
+  </div>
+</div>

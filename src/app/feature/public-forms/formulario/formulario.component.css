@@ -1,0 +1,15 @@
+.step-white::after {
+  background-color: #fff;
+  border: 1px solid #535a6650;
+  color: #535a66;
+}
+
+.step-white::before {
+  background-color: #fff;
+  height: 2px;
+}
+
+.steps .\!step-primary + .\!step-primary:before,
+.steps .\!step-primary:after {
+  border: none !important;
+}

@@ -1,0 +1,19 @@
+<div>
+  <h1 class="text-primary text-3xl font-light mt-4 ml-2 pb-4">{{ title }}</h1>
+  <app-catalog-form
+    (currentCatalogEvent)="receiveCurrentCatalog($event)"
+    [currentCatalog]="currentCatalog"
+    [type]="type"
+    (catalogsEvent)="receiveCatalogs($event)"
+    [catalogs]="catalogs"
+  ></app-catalog-form>
+</div>
+<div>
+  <app-catalog-list
+    (currentCatalogEvent)="receiveCurrentCatalog($event)"
+    [currentCatalog]="currentCatalog"
+    [type]="type"
+    (catalogsEvent)="receiveCatalogs($event)"
+    [catalogs]="catalogs"
+  ></app-catalog-list>
+</div>

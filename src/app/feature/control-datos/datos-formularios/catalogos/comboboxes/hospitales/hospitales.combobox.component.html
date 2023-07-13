@@ -1,0 +1,15 @@
+<mat-form-field class="w-full" appearance="fill">
+  <mat-label>Hospital</mat-label>
+  <input type="text" matInput [formControl]="hospitalFormControl" [matAutocomplete]="auto" [errorStateMatcher]="matcher">
+  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+      {{option.value}}
+    </mat-option>
+  </mat-autocomplete>
+  <mat-error *ngIf="hospitalFormControl.hasError('minlength') || hospitalFormControl.hasError('maxlength')">
+    Ingresa un nombre <strong>valido</strong>
+  </mat-error>
+  <mat-error *ngIf="hospitalFormControl.hasError('required')">
+    Este campo es <strong>requerido</strong>
+  </mat-error>
+</mat-form-field>

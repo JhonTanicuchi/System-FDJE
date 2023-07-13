@@ -1,0 +1,144 @@
+<module-header title="pacientes">
+  <paciente-breadcrumbs breadcrumbs></paciente-breadcrumbs>
+  <paciente-tabs tabs [newsPatients]="newsPacientes.length"></paciente-tabs>
+</module-header>
+
+<div
+  class="w-full h-[calc(100vh - 1rem)] p-4 bg-white border-t-[1px] border-[#535a6650]"
+>
+  <div>
+    <div class="px-4 py-1 text-xs">
+      <h3 class="font-medium">
+        <span class="font-bold">{{ newsPacientes.length }}</span> Pacientes
+        nuevos
+      </h3>
+    </div>
+    <div class="overflow-hidden relative rounded-md">
+      <div
+        class="min-h-[calc(100vh-4rem-16rem)] overflow-hidden bg-neutral-content border border-[#535a6650] rounded-md relative mb-4"
+      >
+        <table class="my_table w-full text-sm text-left text-neutral">
+          <thead class="text-xs text-white uppercase bg-primary">
+            <tr>
+              <th scope="col" class="py-3 px-6">#</th>
+              <th scope="col" class="py-3 px-6">
+                <div class="flex items-center">
+                  Nombres y Apellidos
+                  <a
+                    class="cursor-pointer ml-1"
+                    *ngIf="reverse && newsPacientes.length > 1"
+                    (click)="reversOrder()"
+                  >
+                    <span class="fa-solid fa-caret-up"></span>
+                  </a>
+                  <a
+                    class="cursor-pointer ml-1"
+                    *ngIf="!reverse && newsPacientes.length > 1"
+                    (click)="reversOrder()"
+                  >
+                    <span class="fa-solid fa-caret-down"></span>
+                  </a>
+                </div>
+              </th>
+              <th scope="col" class="py-3 px-6">Identificación</th>
+              <th scope="col" class="py-3 px-6">Tipo de Paciente</th>
+              <th scope="col" class="py-3 px-6">Tipo de Diabetes</th>
+              <th scope="col" class="py-3 px-6">Correo electrónico</th>
+              <th scope="col" class="py-3 px-6">Celular</th>
+              <th scope="col" class="py-3 px-6">Fecha de Registro</th>
+              <th
+                scope="col"
+                class="py-3 px-6"
+                *permissions="['ACTUALIZAR_PACIENTES', 'ARCHIVAR_PACIENTES']"
+              >
+                <span class="sr-only">Acciones</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody *ngIf="!loading" class="divide-y-[0.5px] divide-[#535A6640]">
+            <tr
+              class="bg-white hover:bg-[#4052b510] transition-all"
+              *ngFor="
+                let paciente of newsPacientes | paginate : config;
+                let index = index
+              "
+            >
+              <th
+                scope="row"
+                class="py-3 px-6 font-medium text-neutral whitespace-nowrap dark:text-neutral"
+              >
+                <!-- Indice en orden ascendente -->
+                <span *ngIf="!reverse">{{
+                  config.itemsPerPage * (config.currentPage - 1) + index + 1
+                }}</span>
+                <!-- indice en orden descendente -->
+                <span *ngIf="reverse">{{
+                  newsPacientes.length -
+                    (config.itemsPerPage * (config.currentPage - 1) + index)
+                }}</span>
+              </th>
+              <td
+                class="py-3 px-6 font-medium text-neutral whitespace-nowrap dark:text-neutral capitalize"
+              >
+                <span>{{ paciente.person | NamesSurnamesComplete }}</span>
+              </td>
+              <td class="py-3 px-6">
+                <span>{{ paciente.person.identification }}</span>
+              </td>
+              <td class="py-3 px-6">
+                <span>{{ paciente.type.value }}</span>
+              </td>
+              <td class="py-3 px-6">
+                <span>{{ paciente.medical_record.diabetes_type.value }}</span>
+              </td>
+              <td class="py-3 px-6">
+                <span *ngIf="paciente.email">{{ paciente.email }}</span>
+                <span *ngIf="!paciente.email">---</span>
+              </td>
+              <td class="py-3 px-6">
+                <span>{{ paciente.person.mobile_phone }}</span>
+              </td>
+              <td class="py-3 px-6">
+                <span>{{
+                  paciente.created_at | date : "dd-MM-yyyy HH:mm:ss"
+                }}</span>
+              </td>
+              <th
+                class="py-3 px-6 text-right"
+                *permissions="['ACTUALIZAR_PACIENTES', 'ARCHIVAR_PACIENTES']"
+              >
+                <span
+                  [routerLink]="['/system/pacientes/form/', paciente.id]"
+                  class="fa-regular fa-pen-to-square text-lg cursor-pointer transition-all hover:text-primary"
+                  *permissions="['ACTUALIZAR_PACIENTES']"
+                ></span>
+                <span
+                  (click)="openDialogArchivePaciente(paciente)"
+                  class="fa-regular fa-trash-can text-lg ml-3 cursor-pointer transition-all hover:text-red-600"
+                  *permissions="['ARCHIVAR_PACIENTES']"
+                ></span>
+              </th>
+            </tr>
+          </tbody>
+        </table>
+
+        <div
+          *ngIf="loading || newsPacientes.length == 0"
+          class="h-[calc(100%)] w-full absolute z-10 top-0 left-0"
+        >
+          <div
+            *ngIf="loading"
+            class="h-full w-full bg-[#535a6610] backdrop-blur-sm"
+          >
+            <loader></loader>
+          </div>
+          <no-content
+            *ngIf="newsPacientes.length == 0 && !loading"
+          ></no-content>
+        </div>
+      </div>
+      <!-- Paginación de tabla -->
+      <pagination [config]="config"></pagination>
+    </div>
+  </div>
+</div>

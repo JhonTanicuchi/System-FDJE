@@ -1,0 +1,9 @@
+.my_table tbody tr:nth-child(even) {
+  background-color: #ebecf080;
+}
+
+.my_table tbody tr:nth-child(even):hover {
+  background-color: #ebecf0;
+}
+
+

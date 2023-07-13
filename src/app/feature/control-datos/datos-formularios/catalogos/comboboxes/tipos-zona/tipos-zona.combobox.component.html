@@ -1,0 +1,10 @@
+<mat-form-field appearance="fill" class="w-full">
+  <mat-label>¿En qué zona vive usted?</mat-label>
+  <mat-select
+    [formControl]="housingZoneFormControl">
+    <mat-option *ngFor="let tipoZona of tiposZona"
+      [value]="tipoZona.value">{{tipoZona.value}}</mat-option>
+  </mat-select>
+  <mat-error *ngIf="housingZoneFormControl.hasError('required')">Este campo es <strong>requerido</strong></mat-error>
+    <mat-hint *ngIf="tiposZona == null || tiposZona.length == 0">No hay valores de selección</mat-hint>
+</mat-form-field>

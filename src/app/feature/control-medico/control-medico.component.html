@@ -1,0 +1,49 @@
+<module-header title="Control Médico">
+  <control-medico-breadcrumbs breadcrumbs></control-medico-breadcrumbs>
+  <div tabs class="h-8"></div>
+</module-header>
+
+<div
+  class="grid grid-cols-5 p-8 gap-8 w-full bg-white border-t-[1px] border-[#535a6650]"
+>
+  <!-- Card de exámenes glycemia -->
+  <div
+    *permissions="[
+      'CREAR_EXAMENES',
+      'LEER_EXAMENES',
+      'ACTUALIZAR_EXAMENES',
+      'ELIMINAR_EXAMENES',
+      'CREAR_EXAMENES_HEMOGLOBINA',
+      'LEER_EXAMENES_HEMOGLOBINA',
+      'ACTUALIZAR_EXAMENES_HEMOGLOBINA',
+      'ELIMINAR_EXAMENES_HEMOGLOBINA'
+    ]"
+    class="text-neutral cursor-pointer transition-all hover:scale-[1.02] border-2 border-[#535a6630] rounded-md overflow-hidden"
+    routerLink="/system/control-medico/examenes-glucemia"
+  >
+    <div class="h-36 bg-[#eff0f5] flex justify-center items-center rounded-md">
+      <span class="fas fa-file-medical text-6xl text-[#646e97]"></span>
+    </div>
+    <div class="text-center font-regular py-1">
+      <h3>Exámenes Glucemia</h3>
+    </div>
+  </div>
+  <!-- Card de entrega de insumos -->
+  <div
+    *permissions="[
+      'CREAR_ENTREGAS_INSUMOS',
+      'LEER_ENTREGAS_INSUMOS',
+      'ACTUALIZAR_ENTREGAS_INSUMOS',
+      'ELIMINAR_ENTREGAS_INSUMOS'
+    ]"
+    class="text-neutral cursor-pointer transition-all hover:scale-[1.02] border-2 border-[#535a6630] rounded-md overflow-hidden"
+    routerLink="/system/control-medico/entrega-insumos"
+  >
+    <div class="h-36 bg-[#eff0f5] flex justify-center items-center rounded-md">
+      <span class="fas fa-syringe text-6xl text-[#646e97]"></span>
+    </div>
+    <div class="text-center font-regular py-1">
+      <h3>Entrega de Insumos</h3>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+<mat-form-field appearance="fill" class="w-full">
+  <mat-label>Estado</mat-label>
+  <mat-select [formControl]="statesExamFormControl">
+    <mat-option *ngFor="let state of statesExam" [value]="state.id">
+      {{ state.value }}
+    </mat-option>
+  </mat-select>
+  <mat-error *ngIf="statesExamFormControl.hasError('required')">
+    Este campo es <strong>requerido</strong>
+  </mat-error>
+  <mat-hint *ngIf="statesExam == null ||
+      statesExam.length == 0">No hay estados</mat-hint>
+</mat-form-field>
